@@ -1,3 +1,8 @@
 /env
+<<<<<<< HEAD
 /test.css
 /test.js
+=======
+test.css
+test.js
+>>>>>>> cef88b8748232d930c29ebf50ff7f6994c4ac02e
