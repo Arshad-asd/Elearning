@@ -1,13 +1,13 @@
 import './App.css';
+import Layout from './Components/Layout/Layout';
 import Home from './Containers/user/Home';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 function App() {
   return (
-    <Router>
+ 
     <div className="App">
-       <Home />
+       <Layout />
     </div>
-    </Router>
+   
   );
 }
 
