@@ -9,4 +9,4 @@ def getRoutes(request):
         '/api/token',
         'api/token/refresh',
     ]
-    return Response(routes, safe=False)
+    return Response(routes)
