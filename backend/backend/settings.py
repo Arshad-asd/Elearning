@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+import os
+from decouple import config
 
+SECRET_KEY = config('SECRET_KEY')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-r0m1jw91m1y6_(xpb824onm5ao8-vakrc2n*^4i_&$1!goni%a'
+# SECRET_KEY = 'django-insecure-r0m1jw91m1y6_(xpb824onm5ao8-vakrc2n*^4i_&$1!goni%a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'account.apps.AccountConfig',
+    'accounts.apps.AccountsConfig',
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
@@ -90,13 +93,21 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "Elearning",
-        "USER": "arshad",
-        "PASSWORD": "arshad21",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "NAME": config('DB_NAME'),
+        "USER": config('DB_USER'),
+        "PASSWORD": config('DB_PASSWORD'),
+        "HOST": config('DB_HOST'),
+        "PORT": config('DB_PORT'),
     }
 }
+
+# DEBUG = config('DEBUG', default=False, cast=bool)
+# SECRET_KEY = config('SECRET_KEY')
+# DB_HOST = config('DB_HOST')
+# DB_PORT = config('DB_PORT', default=5432, cast=int)
+# DB_NAME = config('DB_NAME')
+# DB_USER = config('DB_USER')
+# DB_PASSWORD = config('DB_PASSWORD')
 
 
 # Password validation
@@ -184,6 +195,6 @@ MEDIA_ROOT='static/images/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL ='account.UserAccount'
+AUTH_USER_MODEL ='accounts.UserAccount'
 
 CORS_ALLOW_ALL_ORIGINS =True

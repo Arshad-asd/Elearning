@@ -1,12 +1,11 @@
-import React from 'react'
-import '../../Containers/admin/AdminDashboard.css'
+import React from "react";
+import "../../Containers/admin/AdminDashboard.css";
 
 function AdminDashboard() {
-  return (
-    <div className='grid-container'>
-        <h1>Admin boody</h1>
-    </div>
-  )
+  return( <>
+          <p>admin</p>
+      </>
+  );
 }
 
-export default AdminDashboard
+export default AdminDashboard;
