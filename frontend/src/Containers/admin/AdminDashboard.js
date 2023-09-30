@@ -3,7 +3,7 @@ import "../../Containers/admin/AdminDashboard.css";
 
 function AdminDashboard() {
   return( <>
-          <p>admin</p>
+          <p>body of admin</p>
       </>
   );
 }
