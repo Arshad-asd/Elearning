@@ -46,7 +46,7 @@
 }
 
 .admin-sidebar li.logout-button:hover {
-  border-color: #dc3545; /* Change border color on hover for logout button */
+  border-color: #dc3545; 
 }
 
 .admin-sidebar li:hover {
