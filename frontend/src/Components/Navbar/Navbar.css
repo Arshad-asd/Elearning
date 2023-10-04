@@ -49,7 +49,7 @@ nav {
     background: #4d2c5e;
     position: absolute;
     bottom: -10px;
-    left: 0; /* Align the underline with the link text */
+    left: 0; 
     border-radius: 50px;
   }
   
