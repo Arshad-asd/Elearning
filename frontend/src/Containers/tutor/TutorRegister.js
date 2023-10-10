@@ -11,10 +11,10 @@ function TutorRegister() {
      <form>
        <h3 className='text-center'>Tutor SignUp</h3>
        <div className='mb-3'>
-         <input type="text" placeholder='Enter username' className='form-control' />
+         <input type="email" placeholder='Enter Email' className='form-control' />
        </div>
        <div className='mb-3'>
-         <input type="email" placeholder='Enter Email' className='form-control' />
+         <input type="text" placeholder='Enter phonenumber' className='form-control' />
        </div>
        <div className='mb-3'>
          <input type="password" placeholder='Enter password' className='form-control' />
