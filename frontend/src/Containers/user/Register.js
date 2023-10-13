@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from '../../Containers/Utils/axios'; // Adjust the path accordingly
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../../Containers/user/Register.css';
 
 function Register() {
@@ -18,7 +21,7 @@ function Register() {
   };
 
   const validateMobileNumber = (mobileNumber) => {
-    const mobileRegex = /^\d{10}$/;
+    const mobileRegex = /^\+\d{1,3}-\d{3,14}$/;
     return mobileRegex.test(mobileNumber);
   };
 
@@ -39,22 +42,31 @@ function Register() {
     };
   };
 
+  const showToast = (message, type = 'error') => {
+    toast[type](message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000, // 3 seconds
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Update form data
     setFormData({
       ...formData,
       [name]: value,
     });
 
-    // Clear the specific validation error when the input changes
     setValidationErrors((prevErrors) => ({
       ...prevErrors,
       [name]: '',
     }));
 
-    // Validate input based on its name
     switch (name) {
       case 'email':
         if (!validateEmail(value)) {
@@ -62,6 +74,7 @@ function Register() {
             ...prevErrors,
             email: 'Invalid email format',
           }));
+          showToast('Invalid email format');
         }
         break;
       case 'mobileNumber':
@@ -70,6 +83,7 @@ function Register() {
             ...prevErrors,
             mobileNumber: 'Invalid mobile number format',
           }));
+          showToast('Invalid mobile number format');
         }
         break;
       case 'password':
@@ -109,22 +123,20 @@ function Register() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate form fields
     const newErrors = {};
 
-    // Validate email
     if (!validateEmail(formData.email)) {
       newErrors.email = 'Invalid email format';
     }
 
-    // Validate mobile number
     if (formData.mobileNumber && !validateMobileNumber(formData.mobileNumber)) {
       newErrors.mobileNumber = 'Invalid mobile number format';
     }
 
-    // Validate password
     const passwordValidation = validatePassword(formData.password);
     if (!passwordValidation.isLowerCaseValid) {
       newErrors.password = 'Password must contain at least one lowercase letter';
@@ -136,21 +148,43 @@ function Register() {
       newErrors.password = 'Password must be at least 6 characters long';
     }
 
-    // Check if password and confirm password match
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    // If there are errors, update the state and stop form submission
     if (Object.keys(newErrors).length > 0) {
       setValidationErrors(newErrors);
+      Object.values(newErrors).forEach((error) => showToast(error));
       return;
     }
 
-    // If all validations pass, you can proceed with form submission
-    console.log('Form submitted:', formData);
+    try {
+      // Make a POST request to your backend registration endpoint using the Axios instance
+      const response = await axios.post('/api/user/register/', {
+        email: formData.email,
+        phone_number: formData.mobileNumber,
+        password: formData.password,
+        password2: formData.confirmPassword,
+      });
 
-    // Additional logic for form submission (e.g., API call) can be added here
+      // Assuming your backend returns some data upon successful registration
+      const data = response.data;
+
+      // Handle the registration response
+      if (response.status === 201) {
+        // Registration successful
+        console.log('Registration successful:', data);
+        showToast('Registration successful', 'success');
+      } else {
+        // Registration failed
+        console.error('Registration failed:', data);
+        showToast('Registration failed: ' + data.error);
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error('Registration failed:', error.message);
+      showToast('Registration failed: ' + error.message);
+    }
   };
 
   return (
@@ -180,8 +214,7 @@ function Register() {
               <label htmlFor='check' className='custom-input-label ms-2'>
                 Remember me
               </label>
-            </div>
-            <div className='d-grid mt-2'>
+            </div>            <div className='d-grid mt-2'>
               <button type="submit" className='btn btn-primary mb-3'>Sign Up</button>
             </div>
             <p className='text-end mt-2'>
@@ -190,6 +223,16 @@ function Register() {
           </form>
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

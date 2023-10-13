@@ -8,6 +8,7 @@ import Register from '../user/Register'
 import AdminLogin from '../admin/AdminLogin'
 import TutorRegister from '../tutor/TutorRegister'
 import TutorLogin from '../tutor/TutorLogin'
+import UserManagement from '../admin/UserManagement'
 
 const Routers = () => {
   return (
@@ -23,6 +24,7 @@ const Routers = () => {
   
         <Route path="/admin" element={<AdminLogin/>} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path='/admin/usermanagement' element={<UserManagement />} />
 
         {/* <------- Tutor Routes -------> */}
 

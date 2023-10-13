@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate
 User = get_user_model()
 #<------------------------------------------------------------User-Side-Start-------------------------------------------------------->
 class UserRegistrationSerializer(serializers.ModelSerializer):
+    print('2222222222','working')
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -26,6 +27,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'phone_number', 'password', 'password2']  # Include password2 field in fields
+
+    def validate_password(self, password):
+        # Password policy: Minimum 6 characters, at least one uppercase letter, one lowercase letter, and one digit
+        if not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$', password):
+            raise serializers.ValidationError(
+                "Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one digit."
+            )
+        return password
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -51,6 +60,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -105,6 +115,14 @@ class TutorRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'phone_number', 'password', 'password2']  # Include password2 field in fields
+
+    def validate_password(self, password):
+        # Password policy: Minimum 6 characters, at least one uppercase letter, one lowercase letter, and one digit
+        if not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$', password):
+            raise serializers.ValidationError(
+                "Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one digit."
+            )
+        return password
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:

@@ -28,10 +28,10 @@ class UserRegistrationView(APIView):
 
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             return Response(UserRegistrationSerializer(user).data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class=MyTokenObtainPairSerializer
@@ -57,12 +57,13 @@ class AdminTokenObtainPairView(TokenObtainPairView):
 
 #<------------------------------------------------------Tutor-Side------------------------------------------------------------------>
 class TutorRegistrationView(APIView):
+
     def post(self, request):
         serializer = TutorRegistrationSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             return Response({"message": "Tutor registration successful"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 
 class TutorLoginView(APIView):

@@ -1,8 +1,10 @@
 // AdminSidebar.js
 import React, { useState } from 'react';
+
 import '../../Components/Sidebar/AdminSidebar.css';
-import { FaHome, FaUser, FaChalkboardTeacher, FaBook, FaMoneyBillAlt, FaChartBar, FaEnvelope,  FaSignOutAlt } from 'react-icons/fa';
 import AdminHeader from '../../Components/Header/AdminHeader';
+
+import { FaHome, FaUser, FaChalkboardTeacher, FaBook, FaMoneyBillAlt, FaChartBar, FaEnvelope,  FaSignOutAlt } from 'react-icons/fa';
 
 function AdminSidebar() {
   const [isIconsOnly, setIsIconsOnly] = useState(false);
