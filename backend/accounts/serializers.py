@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from phonenumber_field.serializerfields import PhoneNumberField
 
 
 User = get_user_model()
@@ -64,16 +65,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    
-    @classmethod
-    def get_token(cls, user):
+    phone_number = PhoneNumberField(source='user.phone_number', read_only=True)
 
+    def get_token(self, user):
         token = super().get_token(user)
 
         token['user_data'] = {
             'email': user.email,
-            'phone': user.phone_number,
-            'is_superuser':user.is_superuser,
+            'phone': str(self.fields['phone_number'].to_representation(user.phone_number)),  # Convert PhoneNumber to string
+            'is_superuser': user.is_superuser,
         }
 
         return token
