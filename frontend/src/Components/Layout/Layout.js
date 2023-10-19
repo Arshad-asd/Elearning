@@ -18,6 +18,7 @@ function Layout() {
           <AdminSidebar />
         ) : (
           <Navbar />
+          
         ) // Its mainly used for checking its navbar user ,tutor or admin
       }
 
