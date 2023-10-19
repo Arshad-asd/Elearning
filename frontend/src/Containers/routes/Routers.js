@@ -1,14 +1,15 @@
 import React from 'react'
 import {Routes,Route} from 'react-router-dom'
-import Home from '../user/Home'
 import AdminDashboard from '../admin/AdminDashboard'
 import TutorDashboard from '../tutor/TutorDashboard'
+import Home from '../user/home/Home'
 import Login from '../user/Login'
 import Register from '../user/Register'
 import AdminLogin from '../admin/AdminLogin'
 import TutorRegister from '../tutor/TutorRegister'
 import TutorLogin from '../tutor/TutorLogin'
 import UserManagement from '../admin/UserManagement'
+import Profile from '../user/profile/Profile'
 
 const Routers = () => {
   return (
@@ -19,6 +20,7 @@ const Routers = () => {
         <Route path='/signup' element={<Register />} />
         <Route path='/login' element={<Login/>} />
         <Route path="/" element={<Home />}/>
+        <Route path='/profile' element={<Profile />} />
 
         {/* <------- Admin Routes -------> */}
   
