@@ -11,6 +11,9 @@ import TutorLogin from '../tutor/TutorLogin'
 import UserManagement from '../admin/UserManagement'
 import Profile from '../user/profile/Profile'
 import Plan from '../user/plan/Plan'
+import Service from '../user/service/Service'
+import Course from '../user/course/Course'
+
 
 const Routers = () => {
   return (
@@ -22,8 +25,9 @@ const Routers = () => {
         <Route path='/login' element={<Login/>} />
         <Route path="/" element={<Home />}/>
         <Route path='/profile' element={<Profile />} />
-        <Route path='/plan' element={<Plan />} />
-      
+        <Route path='/plans' element={<Plan />} />
+        <Route path='/service' element={<Service />} />
+        <Route path='/courses' element={<Course />} />
 
         {/* <------- Admin Routes -------> */}
   
