@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import "./Navbar.css";
 import img from "../../assets/ElearningLogo.svg";
 
@@ -21,42 +22,48 @@ class Navbar extends Component {
   };
 
   render() {
+    const navLinks = [
+      { id: 1, text: 'Home', path: '/' },
+      { id: 4, text: 'Service', path: '/service' },
+      { id: 3, text: 'Courses', path: '/courses' },
+      { id: 2, text: 'Plans', path: '/plans' },
+      { id: 5, text: 'Contact', path: '/contact' },
+    ];
+
     return (
       <>
         <nav>
-          <a href="#">
+          <Link to="/">
             <img src={img} alt="Logo" />
-          </a>
+          </Link>
           <div>
             <ul
               id="navbar"
               className={this.state.mobileMenuOpen ? "active" : ""}
             >
-              {["Home", "Aboutus", "Courses", "Service", "Contact"].map(
-                (link, index) => (
-                  <li key={index}>
-                    <a
-                      href="#"
-                      className={
-                        index === this.state.currentActive ? "active-link" : ""
+              {navLinks.map((link) => (
+                <li key={link.id}>
+                  <Link
+                    to={link.path}
+                    className={
+                      link.id === this.state.currentActive ? "active-link" : ""
+                    }
+                    onClick={() => {
+                      this.handleClick(link.id);
+                      if (window.innerWidth <= 769) {
+                        this.handleMobileMenuClick();
                       }
-                      onClick={() => {
-                        this.handleClick(index);
-                        if (window.innerWidth <= 769) {
-                          this.handleMobileMenuClick();
-                        }
-                      }}
-                    >
-                      {link}
-                    </a>
-                  </li>
-                )
-              )}
+                    }}
+                  >
+                    {link.text}
+                  </Link>
+                </li>
+              ))}
               {/* Add a profile icon here */}
               <li>
-                <a href="#" className="profile-icon">
+                <Link to="/profile" className="profile-icon">
                   <i className="fas fa-user"></i>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
