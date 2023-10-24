@@ -4,7 +4,7 @@ import axios from '../../Containers/Utils/axios'; // Adjust the path accordingly
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../Containers/user/Register.css';
-
+import { useNavigate } from 'react-router-dom';
 function TutorRegister() {
   const [formData, setFormData] = useState({
     email: '',
@@ -14,7 +14,7 @@ function TutorRegister() {
   });
 
   const [validationErrors, setValidationErrors] = useState({});
-
+  const navigate = useNavigate();
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -176,6 +176,7 @@ function TutorRegister() {
         // Registration successful
         console.log('Registration successful:', data);
         showToast('Registration successful', 'success');
+        navigate('/tutor');
       } else {
         // Registration failed
         console.error('Registration failed:', data);
