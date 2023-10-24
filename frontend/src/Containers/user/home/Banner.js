@@ -7,11 +7,12 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const images = [
-  '../../../assets/education.avif',
-  '/public/images/annie-spratt-QckxruozjRg-unsplash.jpg',
-  '/public/images/Executives at Davos Are Eager for Automation - Truthdig.jpeg',
+  'image/education.avif',
+  'image/image2.jpg',
+  'image/image3.jpg',
   // Add more image URLs as needed
 ];
+
 
 
 

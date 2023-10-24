@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
 
+#<-----------------------------------------------------Bascis credentials account manage-- Start ------------------------------------------------->                                  
+
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password=None):
         if not email:
@@ -23,8 +25,14 @@ class UserAccountManager(BaseUserManager):
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
+        user.role = Role.ADMIN
         user.save(using=self._db)
         return user
+
+class Role(models.TextChoices):
+    STUDENT = 'student', 'Student'
+    TUTOR = 'tutor', 'Tutor'
+    ADMIN = 'admin', 'Admin'
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=50, unique=True)
@@ -32,6 +40,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=200, null=True, blank=True)
     last_name = models.CharField(max_length=200, null=True, blank=True)
     display_pic = models.ImageField(upload_to='user/', null=True, blank=True, default='user/user.png')
+
+    role = models.CharField(max_length=20, choices=Role.choices, default=Role.STUDENT)
 
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
@@ -54,4 +64,23 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def has_module_perms(self, add_label):
         return True
+
+
+#<-----------------------------------------------------Bascis credentials account manage-- End ------------------------------------------------->                                  
+
+
+#<-----------------------------------------------------Plans manage-- Start ------------------------------------------------->                                  
+
+
+class Plan(models.Model):
+    type = models.CharField(max_length=15)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    is_active = models.BooleanField(default=True)
+
+class Feature(models.Model):
+    entry = models.ForeignKey(Plan, related_name='features', on_delete=models.CASCADE)
+    feature_text = models.CharField(max_length=200)
+
+
+#<-----------------------------------------------------Plans manage-- End ------------------------------------------------->                                  
 

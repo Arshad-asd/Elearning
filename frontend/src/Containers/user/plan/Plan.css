@@ -67,6 +67,7 @@
     .columns {
       width: 100%;
     }
+
   }
   
   /* Small devices (portrait tablets and large phones, 600px and up) */
@@ -81,8 +82,19 @@
     .columns {
       width: 48%; /* or any other suitable width */
     }
+ 
   }
-  
+  @media only screen and (max-width: 768px) {
+    .columns {
+      padding: 10px; /* or any other suitable width */
+    }
+    .plan-container {
+      display: block; /* or any other display value suitable for small screens */
+      justify-content: center; /* Horizontal centering */
+      align-items: center;     /* Vertical centering */
+      height: 100vh;           /* Adjust as needed */
+    }
+  }
   /* Large devices (laptops/desktops, 992px and up) */
   @media only screen and (min-width: 992px) {
     .columns {

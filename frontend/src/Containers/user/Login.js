@@ -1,74 +1,141 @@
-// components/Login.js
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginRequest, loginSuccess, loginFailure } from '../../Redux/slices/userSlice/loginSlice';
-import { toast, ToastContainer } from 'react-toastify';
+import "./Login.css";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useLoginMutation } from "../../Redux/slices/userSlice/userApiSlice";
+import { setCredentials } from "../../Redux/slices/userSlice/authSlice";
+import { toast } from "react-toastify";
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
-import api from '../../Containers/Utils/axios';
+function UserLogin() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [formErrors, setFormErrors] = useState({});
 
-function Login() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Use useNavigate instead of useHistory
 
-  const loading = useSelector((state) => state.login.loading);
-  const error = useSelector((state) => state.login.error);
+  const [login] = useLoginMutation();
+  const { userInfo } = useSelector((state) => state.auth || {});
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userInfo]);
 
-  const handleLogin = async (e) => {
+  useEffect(() => {
+    if (Object.keys(formErrors).length == 0) {
+      console.log();
+    }
+  }, [formErrors]);
+  const submitHandler = async (e) => {
     e.preventDefault();
-
-    dispatch(loginRequest());
+    setFormErrors(validate(email, password));
 
     try {
-      const response = await api.post('/api/token/user', {
-        email,
-        password,
-      });
-
-      const { userInfo, token } = response.data;
-
-      // Save the token to local storage
-      localStorage.setItem('token', token);
-
-      dispatch(loginSuccess({ userInfo, token }));
-      toast.success('Login successful!');
-      console.log(response.data)
-      // Navigate to another page upon successful login
-      navigate('/'); // Replace '/dashboard' with the desired route
-    } catch (error) {
-      dispatch(loginFailure({ error: 'An error occurred during login.' }));
-      toast.error('Login failed. Please check your credentials.');
+      const res = await login({ email, password }).unwrap();
+      console.log("res", res);
+      dispatch(setCredentials({ ...res }));
+      navigate("/");
+    } catch (err) {
+      toast.error(err?.data || err?.error);
     }
   };
 
+  const validate = (email, password) => {
+    const errors = {};
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!email) {
+      errors.email = "Email is required";
+    } else if (!regex.test(email)) {
+      errors.email = "This is an invalid email";
+    }
+    if (!password) {
+      errors.password = "Password is required";
+    } else if (password.length < 6) {
+      errors.password = "Invalid Password";
+    } else if (password.length > 10) {
+      errors.password = "Invalid Password";
+    }
+    return errors;
+  };
   return (
-    <div className='login template d-flex justify-content-center align-items-center vh-100' style={{ backgroundColor: '#EFD3B5' }}>
-      <div className='form_container p-5 rounded bg-white'>
-        <form onSubmit={handleLogin}>
-          <h3 className='text-center'>Sign In</h3>
-          <div className='mb-3'>
-            <input type="email" placeholder='Enter Email' className='form-control' value={email} onChange={(e) => setEmail(e.target.value)} />
+    <div
+      className="login template d-flex justify-content-center align-items-center vh-100 "
+      style={{ backgroundColor: "#EFD3B5" }}
+    >
+      <div className="form_container p-5 rounded bg-white">
+        <form onSubmit={submitHandler}>
+          <h3 className="text-center">Sign In</h3>
+          <div className="mb-3">
+            <input
+              type="email"
+              value={email}
+              placeholder="Enter Email"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              className="form-control"
+            />
+            {formErrors.email && (
+              <p style={{ color: "red" }}>{formErrors.email}</p>
+            )}
           </div>
-          <div className='mb-3'>
-            <input type="password" placeholder='Enter password' className='form-control' value={password} onChange={(e) => setPassword(e.target.value)} />
+          <div className="mb-3">
+            <input
+              type="password"
+              value={password}
+              placeholder="Enter password"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              className="form-control"
+            />
+            <p style={{ color: "red" }}>{formErrors.password}</p>
           </div>
-          <div className='d-grid'>
-            <button type="submit" className='btn btn-primary mb-3' disabled={loading}>
+
+          <div className="d-grid mt-4">
+            <button className="btn btn-primary mb-3">
               Sign In
             </button>
           </div>
-          <p className='text-end mt-2'>
-            Forgot <a href=''>Password?</a>
-          </p>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          <div className="text-end mt-2">
+            <p className="link">
+              <Link
+                style={{ color: "black", textDecoration: "none" }}
+                to="/forgotPassword"
+              >
+                Forgot Password ?
+              </Link>{" "}
+              |
+              <Link
+                style={{ color: "black", textDecoration: "none" }}
+                to="/signup"
+                className="ms-2"
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
         </form>
+        <div className="links-container text-end mt-2">
+          <p>
+            <Link
+              style={{ color: "black", textDecoration: "none" }}
+              to="/otpLoginEmail"
+              className="ms-2"
+            >
+              Otp Login
+            </Link>
+          </p>
+          <p></p>
+        </div>
       </div>
       <ToastContainer />
     </div>
   );
 }
 
-export default Login;
+export default UserLogin;

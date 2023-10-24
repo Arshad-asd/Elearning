@@ -6,12 +6,14 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from phonenumber_field.serializerfields import PhoneNumberField
+from django.contrib.humanize.templatetags import humanize
+from .models import Role
+
 
 
 User = get_user_model()
 #<------------------------------------------------------------User-Side-Start-------------------------------------------------------->
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    print('2222222222','working')
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -64,36 +66,43 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    phone_number = PhoneNumberField(source='user.phone_number', read_only=True)
-
-    def get_token(self, user):
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
         token = super().get_token(user)
-
-        token['user_data'] = {
-            'email': user.email,
-            'phone': str(self.fields['phone_number'].to_representation(user.phone_number)),  # Convert PhoneNumber to string
-            'is_superuser': user.is_superuser,
-        }
-
+        token['role'] = user.role  # Assuming you have a 'role' field in your user model
         return token
+
+class CustomTokenRefreshSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+        data['access'] = str(refresh.access_token)
+        data['role'] = self.user.role
+        return data
+
 #<------------------------------------------------------------------User-Side-End--------------------------------------------------->
 
 
 
 #<------------------------------------------------------------------Admin-side-Start------------------------------------------------>
 
-class AdminTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        if not user.is_superuser:
-            raise serializers.ValidationError("You are not authorized to log in as an admin.")
 
-        token = super().get_token(user)
-        # Customize the token data here if needed
-        return token
+
+class UserSerializer(serializers.ModelSerializer):
+    date_joined = serializers.DateTimeField(format="%Y-%m-%d", read_only=True)
+    last_login_display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'phone_number', 'first_name', 'last_name', 'is_active', 'display_pic', 'role', 'date_joined', 'last_login_display']
+    def get_last_login_display(self, obj):
+        return humanize.naturaltime(obj.last_login)
+
 
 #<------------------------------------------------------------------Admin-Side-End--------------------------------------------------->
+
+
 
 #<------------------------------------------------------------------Tutor-Side-Start------------------------------------------------->
 
@@ -141,7 +150,8 @@ class TutorRegistrationSerializer(serializers.ModelSerializer):
         user = User.objects.create(
             email=validated_data['email'],
             phone_number=validated_data['phone_number'],
-            is_tutor = True 
+            is_tutor = True ,
+            role = Role.TUTOR
         )
 
         user.set_password(validated_data['password'])
@@ -150,28 +160,3 @@ class TutorRegistrationSerializer(serializers.ModelSerializer):
         print(user.email,1111111111111111111111111)
         print(user.is_tutor)
         return user
-
-
-class TutorLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
-
-    def validate(self, data):
-        email = data.get('email')
-        password = data.get('password')
-
-        # Authenticate the tutor
-        user = authenticate(email=email, password=password)
-
-        if not user:
-            raise serializers.ValidationError("Invalid eamil or password.")
-
-        if not user.is_active or not user.is_tutor:
-            raise serializers.ValidationError("You are not authorized to log in as a tutor.")
-
-        refresh = RefreshToken.for_user(user)
-
-        return {
-            'access_token': str(refresh.access_token),
-            'refresh_token': str(refresh),
-        }

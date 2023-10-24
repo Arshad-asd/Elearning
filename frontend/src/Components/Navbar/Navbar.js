@@ -1,82 +1,89 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import "./Navbar.css";
 import img from "../../assets/ElearningLogo.svg";
-
-class Navbar extends Component {
-  state = {
-    mobileMenuOpen: false,
-    currentActive: null,
+import {MdOutlineLogout} from 'react-icons/md';
+const Navbar = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentActive, setCurrentActive] = useState(null);
+  const handleMobileMenuClick = () => {
+    setMobileMenuOpen((prevState) => !prevState);
+  };
+  const { userInfo } = useSelector((state) => state.auth);
+  
+  const handleClick = (index) => {
+    setCurrentActive(index);
   };
 
-  handleMobileMenuClick = () => {
-    this.setState((prevState) => ({
-      mobileMenuOpen: !prevState.mobileMenuOpen,
-    }));
-  };
+  const navLinks = [
+    { id: 1, text: 'Home', path: '/' },
+    { id: 4, text: 'Service', path: '/service' },
+    { id: 3, text: 'Courses', path: '/courses' },
+    { id: 2, text: 'Plans', path: '/plans' },
+    { id: 5, text: 'Contact', path: '/contact' },
+  ];
 
-  handleClick = (index) => {
-    this.setState({
-      currentActive: index,
-    });
-  };
-
-  render() {
-    const navLinks = [
-      { id: 1, text: 'Home', path: '/' },
-      { id: 4, text: 'Service', path: '/service' },
-      { id: 3, text: 'Courses', path: '/courses' },
-      { id: 2, text: 'Plans', path: '/plans' },
-      { id: 5, text: 'Contact', path: '/contact' },
-    ];
-
-    return (
-      <>
-        <nav>
-          <Link to="/">
-            <img src={img} alt="Logo" />
-          </Link>
-          <div>
-            <ul
-              id="navbar"
-              className={this.state.mobileMenuOpen ? "active" : ""}
-            >
-              {navLinks.map((link) => (
-                <li key={link.id}>
-                  <Link
-                    to={link.path}
-                    className={
-                      link.id === this.state.currentActive ? "active-link" : ""
+  return (
+    <>
+      <nav>
+        <Link to="/">
+          <img src={img} alt="Logo" />
+        </Link>
+        <div>
+          <ul
+            id="navbar"
+            className={mobileMenuOpen ? "active" : ""}
+          >
+            {navLinks.map((link) => (
+              <li key={link.id}>
+                <Link
+                  to={link.path}
+                  className={
+                    link.id === currentActive ? "active-link" : ""
+                  }
+                  onClick={() => {
+                    handleClick(link.id);
+                    if (window.innerWidth <= 769) {
+                      handleMobileMenuClick();
                     }
-                    onClick={() => {
-                      this.handleClick(link.id);
-                      if (window.innerWidth <= 769) {
-                        this.handleMobileMenuClick();
-                      }
-                    }}
-                  >
-                    {link.text}
-                  </Link>
-                </li>
-              ))}
-              {/* Add a profile icon here */}
-              <li>
-                <Link to="/profile" className="profile-icon">
-                  <i className="fas fa-user"></i>
+                  }}
+                >
+                  {link.text}
                 </Link>
               </li>
-            </ul>
-          </div>
-          <div id="mobile" onClick={this.handleMobileMenuClick}>
-            <i
-              id="bar"
-              className={this.state.mobileMenuOpen ? "fas fa-times" : "fas fa-bars"}
-            ></i>
-          </div>
-        </nav>
-      </>
-    );
-  }
-}
+            ))}
+            {/* Add a profile icon here */}
+            <li>
+              <Link to="/profile" className="profile-icon">
+                <i className="fas fa-user"></i>
+              </Link>
+            </li>
+            {userInfo ? (
+              // If user is logged in, show the Logout button
+              <li>
+                <button  className="logout-button">
+                      <MdOutlineLogout />
+              </button>
+              </li>
+            ) : (
+              // If user is not logged in, show the Login button
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
+            )}
+          </ul>
+        </div>
+        <div id="mobile" onClick={handleMobileMenuClick}>
+          <i
+            id="bar"
+            className={mobileMenuOpen ? "fas fa-times" : "fas fa-bars"}
+          ></i>
+
+        </div>
+      </nav>
+    </>
+  );
+};
 
 export default Navbar;
