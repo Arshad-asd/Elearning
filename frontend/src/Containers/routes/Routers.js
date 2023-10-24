@@ -13,6 +13,8 @@ import Profile from '../user/profile/Profile'
 import Plan from '../user/plan/Plan'
 import Service from '../user/service/Service'
 import Course from '../user/course/Course'
+import TutorProfile from '../tutor/profile/Profile'
+import TutorManagement from '../admin/TutorManagement'
 
 
 const Routers = () => {
@@ -34,13 +36,13 @@ const Routers = () => {
         <Route path="/admin" element={<AdminLogin/>} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path='/admin/usermanagement' element={<UserManagement />} />
-
+        <Route path='/admin/tutormanagemet' element={<TutorManagement />} />
         {/* <------- Tutor Routes -------> */}
 
         <Route path='/tutor' element={<TutorLogin />} /> 
         <Route path='/tutor/signup' element={<TutorRegister />}/>
         <Route path="/tutor/dashboard" element={<TutorDashboard />} />
-
+        <Route path='/tutor/profile' element={<TutorProfile />} />
     </Routes>
   )
 }

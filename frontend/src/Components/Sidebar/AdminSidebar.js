@@ -5,7 +5,8 @@ import '../../Components/Sidebar/AdminSidebar.css';
 import AdminHeader from '../../Components/Header/AdminHeader';
 
 import { FaHome, FaUser, FaChalkboardTeacher, FaBook, FaMoneyBillAlt, FaChartBar, FaEnvelope,  FaSignOutAlt } from 'react-icons/fa';
-
+import { NavLink } from 'react-router-dom';
+import {HiOutlineCurrencyRupee} from 'react-icons/hi'
 function AdminSidebar() {
   const [isIconsOnly, setIsIconsOnly] = useState(false);
 
@@ -27,17 +28,27 @@ function AdminSidebar() {
           {isIconsOnly ? '☰' : '✖'}
         </div>
         <ul>
+        <NavLink to='/admin/dashboard' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
           <li>
             <FaHome className="sidebar-icon" />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Dashboard</span>
           </li>
+        </NavLink>
+        <NavLink to='/admin/usermanagement' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
           <li>
             <FaUser className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>User Management</span>
           </li>
+        </NavLink>
+        <NavLink to='/admin/tutormanagemet' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
           <li>
             <FaChalkboardTeacher className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Tutor Management</span>
+          </li>
+          </NavLink>
+          <li>
+            <HiOutlineCurrencyRupee className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
+            <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Plans</span>
           </li>
           <li>
             <FaBook className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
