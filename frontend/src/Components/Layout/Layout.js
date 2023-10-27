@@ -22,8 +22,13 @@ function Layout() {
         ) // Its mainly used for checking its navbar user ,tutor or admin
       }
 
-      <Routers />
+      <Routers /> 
 
+
+      {
+          tutorHeader ? null : adminHeader ? null : <Footer />
+          }
+      
 
     </>
   );

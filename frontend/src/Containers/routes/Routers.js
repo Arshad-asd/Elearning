@@ -15,6 +15,9 @@ import Service from '../user/service/Service'
 import Course from '../user/course/Course'
 import TutorProfile from '../tutor/profile/Profile'
 import TutorManagement from '../admin/TutorManagement'
+import PrivateRouteAdmin from '../Utils/PrivateRouteAdmin'
+import PrivateRouteTutor from '../Utils/PrivateRouteTutor'
+import PrivateRouteUser from '../Utils/PrivateRouteUser'
 
 
 const Routers = () => {
@@ -25,24 +28,29 @@ const Routers = () => {
 
         <Route path='/signup' element={<Register />} />
         <Route path='/login' element={<Login/>} />
-        <Route path="/" element={<Home />}/>
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/plans' element={<Plan />} />
-        <Route path='/service' element={<Service />} />
-        <Route path='/courses' element={<Course />} />
-
+        <Route path='' element={<PrivateRouteUser />}>
+            <Route path="/" element={<Home />}/>
+            <Route path='/profile' element={<Profile />} />
+            <Route path='/plans' element={<Plan />} />
+            <Route path='/service' element={<Service />} />
+            <Route path='/courses' element={<Course />} />
+        </Route>
         {/* <------- Admin Routes -------> */}
   
         <Route path="/admin" element={<AdminLogin/>} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path='/admin/usermanagement' element={<UserManagement />} />
-        <Route path='/admin/tutormanagemet' element={<TutorManagement />} />
+        <Route path="" element={<PrivateRouteAdmin />}>
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path='/admin/usermanagement' element={<UserManagement />} />
+            <Route path='/admin/tutormanagemet' element={<TutorManagement />} />
+        </Route>
         {/* <------- Tutor Routes -------> */}
 
         <Route path='/tutor' element={<TutorLogin />} /> 
-        <Route path='/tutor/signup' element={<TutorRegister />}/>
-        <Route path="/tutor/dashboard" element={<TutorDashboard />} />
-        <Route path='/tutor/profile' element={<TutorProfile />} />
+        <Route path='' element={<PrivateRouteTutor />}>
+            <Route path='/tutor/signup' element={<TutorRegister />}/>
+            <Route path="/tutor/dashboard" element={<TutorDashboard />} />
+            <Route path='/tutor/profile' element={<TutorProfile />} />
+        </Route>
     </Routes>
   )
 }

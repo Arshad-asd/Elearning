@@ -1,11 +1,11 @@
 import { apiSlice } from "./apiSlice";
-const TUTOR_URL ='/api/tutor'
+const TUTOR_URL ='/api'
 
 export const tutorApiSlice =apiSlice.injectEndpoints({
   endpoints:(builder)  =>({
     tutorLogin:builder.mutation({
         query:(data)=>({
-            url:`${TUTOR_URL}/login`,
+            url:`${TUTOR_URL}/token/`,
             method:'POST',
             body:data
         })

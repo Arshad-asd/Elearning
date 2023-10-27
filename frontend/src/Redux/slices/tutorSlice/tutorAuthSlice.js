@@ -10,6 +10,7 @@ const tutorAuthSlice =createSlice({
     reducers:{
         setTutorCredentials:(state,action)=>{
             state.tutorInfo=action.payload
+            console.log(state.tutorInfo,'okkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
             localStorage.setItem('tutorInfo',JSON.stringify(action.payload))
         },
         TutorLogout:(state)=>{
