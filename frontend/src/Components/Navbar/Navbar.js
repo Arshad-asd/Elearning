@@ -62,7 +62,7 @@ const Navbar = () => {
             {userInfo ? (
               // If user is logged in, show the Logout button
               <li>
-                <button  className="logout-button">
+                <button  className="logout-buttons">
                       <MdOutlineLogout />
               </button>
               </li>

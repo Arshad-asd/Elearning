@@ -61,7 +61,12 @@ nav {
     color: #fff;
     align-items: center;
   }
-  
+  .logout-buttons{
+    background-color: #5c93d9;
+    border-radius: 5px;
+    width: 35px;
+    height: 35px;
+  }
   @media screen and (max-width: 769px) {
     #navbar {
       display: flex;
