@@ -8,8 +8,8 @@ from rest_framework.generics import UpdateAPIView
 
 from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializers import  TutorRegistrationSerializer, UserRegistrationSerializer # AdminTokenObtainPairSerializer, TutorLoginSerializer,MyTokenObtainPairSerializer,
+from rest_framework.permissions import IsAuthenticated,BasePermission
+from .serializers import  TutorRegistrationSerializer, UserRegistrationSerializer 
 from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer,UserSerializer
 
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -32,7 +32,7 @@ class GetRoutesView(APIView):
 
         return Response(routes)
 
-#<--------------------------------------------------------User_Side------------------------------------------------------------->
+#<--------------------------------------------------------User_Side-Start------------------------------------------------------------>
 
 class UserRegistrationView(APIView):
 
@@ -53,15 +53,20 @@ class CustomTokenRefreshView(TokenRefreshView):
 
 
 
+#<------------------------------------------------------Admin-Side-Start------------------------------------------------------------------>
 
+class IsAdminUser(BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated and request.user.role == 'admin'
 
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
-"""class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class=MyTokenObtainPairSerializer
-"""
+    def post(self, request, *args, **kwargs):
 
+        request.auth.delete()
+        return Response({'detail': 'Logout successful'}, status=status.HTTP_200_OK)
 
-#<------------------------------------------------------Admin-Side------------------------------------------------------------------>
 
 class UserListView(generics.ListAPIView):
 
@@ -95,12 +100,9 @@ class TutorListView(generics.ListAPIView):
     def get_queryset(self):
         # Filter users by the 'student' role
         return UserAccount.objects.filter(role='tutor')
-"""
-class AdminTokenObtainPairView(TokenObtainPairView):
-    serializer_class = AdminTokenObtainPairSerializer
-"""
 
-#<------------------------------------------------------Tutor-Side------------------------------------------------------------------>
+
+#<------------------------------------------------------Tutor-Side-Start----------------------------------------------------------------->
 class TutorRegistrationView(APIView):
 
     def post(self, request):
@@ -108,12 +110,3 @@ class TutorRegistrationView(APIView):
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             return Response({"message": "Tutor registration successful"}, status=status.HTTP_201_CREATED)
-        
-
-
-"""class TutorLoginView(APIView):
-    def post(self, request):
-        serializer = TutorLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response(serializer.validated_data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)"""
