@@ -103,13 +103,13 @@ function UserLogin() {
           </div>
           <div className="text-end mt-2">
             <p className="link">
-              <Link
+              {/* <Link
                 style={{ color: "black", textDecoration: "none" }}
                 to="/forgotPassword"
               >
                 Forgot Password ?
               </Link>{" "}
-              |
+              | */}
               <Link
                 style={{ color: "black", textDecoration: "none" }}
                 to="/signup"
@@ -121,7 +121,7 @@ function UserLogin() {
           </div>
         </form>
         <div className="links-container text-end mt-2">
-          <p>
+          {/* <p>
             <Link
               style={{ color: "black", textDecoration: "none" }}
               to="/otpLoginEmail"
@@ -129,7 +129,7 @@ function UserLogin() {
             >
               Otp Login
             </Link>
-          </p>
+          </p> */}
           <p></p>
         </div>
       </div>
