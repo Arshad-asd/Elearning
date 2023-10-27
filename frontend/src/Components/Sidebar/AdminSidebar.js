@@ -3,27 +3,33 @@ import React, { useState } from 'react';
 
 import '../../Components/Sidebar/AdminSidebar.css';
 import AdminHeader from '../../Components/Header/AdminHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import { adminApiSlice } from '../../Redux/slices/adminSlice/adminApiSlice';
 
 import { FaHome, FaUser, FaChalkboardTeacher, FaBook, FaMoneyBillAlt, FaChartBar, FaEnvelope,  FaSignOutAlt } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 import {HiOutlineCurrencyRupee} from 'react-icons/hi'
+
+
 function AdminSidebar() {
   const [isIconsOnly, setIsIconsOnly] = useState(false);
 
   const toggleIconsOnly = () => {
     setIsIconsOnly(!isIconsOnly);
   };
+  const { adminLogout } = adminApiSlice;
+  const {adminInfo}=useSelector((state)=>state.adminAuth)
   
-  
+  const dispatch=useDispatch()
+   
   const handleLogout = () => {
-    // Add logic for logging out
-    console.log('Logout clicked');
+   dispatch(adminLogout())
   };
   
   return (
     <>
       <AdminHeader />
-      <aside className={`admin-sidebar ${isIconsOnly ? 'icons-only' : ''}`}>
+     {adminInfo && adminInfo.role === 'admin' && <aside className={`admin-sidebar ${isIconsOnly ? 'icons-only' : ''}`}>
         <div className="toggle-button" onClick={toggleIconsOnly}>
           {isIconsOnly ? '☰' : '✖'}
         </div>
@@ -73,7 +79,7 @@ function AdminSidebar() {
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Logout</span>
           </li>
         </ul>
-      </aside>
+      </aside> }
     </>
   );
 }

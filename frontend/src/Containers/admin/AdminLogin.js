@@ -1,11 +1,16 @@
-
+// In your AdminLogin.js
 import '../user/Login.css';
+import 'react-toastify/dist/ReactToastify.css';
+
 import {Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { setAdminCredentials } from '../../Redux/slices/adminSlice/adminAuthSlice';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import instance from '../../Containers/Utils/axios';
+import jwt_decode from 'jwt-decode';
+
+
 
 function AdminLogin() {
 
@@ -21,7 +26,9 @@ function AdminLogin() {
 
 
   useEffect(() => {
-    if (adminInfo) {
+    const shouldNavigate = adminInfo && adminInfo.role === 'admin';
+
+    if (shouldNavigate) {
       navigate("/admin/dashboard");
     }
   }, [navigate, adminInfo]);
@@ -31,21 +38,62 @@ function AdminLogin() {
         console.log()
     }
   },[formErrors])
+
+
+  const showToast = (message, type = 'error') => {
+    toast[type](message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000, // 3 seconds
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      
+    });
+  };
+  
+
   const submitHandler = async (e) => {
     e.preventDefault();
-        setFormErrors(validate(email,password))
-       setIsSubmit(true)
-       
-       try {
-         const res=await instance.post('/api/token/',{email,password})
-         console.log(res)
-           dispatch(setAdminCredentials({ ...res.data })) 
-           navigate('/admin/usermanagement');
-       } catch (error) {
-        console.log(error)
-              toast.error(error?.data|| error.error)
-       }
+    setFormErrors(validate(email, password));
+    setIsSubmit(true);
+  
+    try {
+      const res = await instance.post(`/api/token/`, { email, password });
+  
+      // Check for successful response status
+      if (res.status === 200) {
+        try {
+          // Decoding access token
+          const decodedAccessToken = jwt_decode(res.data.access);
+          console.log("Decoded Access Token:", decodedAccessToken);
+  
+          const { role } = decodedAccessToken;
+  
+          // Check if the role is "admin" before navigating
+          if (role === "admin") {
+            dispatch(setAdminCredentials({ user_id: decodedAccessToken.user_id, role, ...res.data }));
+            navigate('/admin/dashboard');
+          } else {
+            showToast("Invalid role", 'error');
+          }
+        } catch (decodeError) {
+          console.error("Error decoding token:", decodeError.message);
+          showToast("Error decoding token", 'error');
+        }
+      } else {
+        // Handle non-200 status (e.g., server error)
+        console.error("Server error:", res.status);
+        showToast("Server error", 'error');
+      }
+    } catch (error) {
+      console.error("API request error:", error);
+      showToast(error?.response?.data || error.error || "Error in API request", 'error');
+    }
   };
+  
+  
 
   const validate=(email,password)=>{
 
@@ -92,6 +140,16 @@ function AdminLogin() {
       <Link style={{color:"black",textDecoration:'none'}} to='/admin/otpLoginEmail' className="ms-2">Otp Login</Link>
       </p> */}
     </div>
+    <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
   </div>
   )
 }
