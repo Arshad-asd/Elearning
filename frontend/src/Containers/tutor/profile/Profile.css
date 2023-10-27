@@ -1,6 +1,9 @@
-body{margin-top:20px;
-    color: #bcd0f7;
-        background: #1A233A;
+body{
+    background-color: aliceblue;
+}
+
+    .row-with-padding{
+        padding-top: 10rem;
     }
     .account-settings .user-profile {
         margin: 0 0 1rem 0;
@@ -13,10 +16,16 @@ body{margin-top:20px;
     .account-settings .user-profile .user-avatar img {
         width: 90px;
         height: 90px;
-        -webkit-border-radius: 100px;
-        -moz-border-radius: 100px;
-        border-radius: 100px;
-    }
+        border: 2px solid gold; /* Set your border color */
+        -webkit-border-radius: 50%; /* Optional: To make it a circular border */
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        transition: transform 0.4s ease; /* Add a smooth transition effect */
+      }
+      
+      .account-settings .user-profile .user-avatar img:hover {
+        transform: scale(1.2); /* Increase the scale factor for zoom effect */
+      }
     .account-settings .user-profile h5.user-name {
         margin: 0 0 0.5rem 0;
     }
@@ -31,7 +40,7 @@ body{margin-top:20px;
         text-align: center;
     }
     .card {
-        background: #272E48;
+        background: #0030df;
         -webkit-border-radius: 5px;
         -moz-border-radius: 5px;
         border-radius: 5px;
@@ -47,4 +56,38 @@ body{margin-top:20px;
         background: #1A233A;
         color: #bcd0f7;
     }
-    
+
+    .centered-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .icon {
+        display: block;
+        margin-bottom: 10px; /* Adjust the margin as needed */
+      }
+      .col{
+        display: flex;
+        justify-content: flex-start;
+        padding-bottom: 10px;
+       padding: 10px;
+      }
+      .col:hover {
+        border: 1px solid rgb(212, 42, 255); 
+        border-radius: 10px;
+        background-color: rgb(255, 171, 248);
+        /* Set the desired border style and color */
+      }
+      .col i:hover {
+        transform: scale(1.2); /* Adjust the scale factor as needed */
+        transition: transform 0.3s ease; /* Adjust the duration and timing function as needed */
+      }
+      #submit {
+        transition: transform 0.3s ease; /* Adjust the duration and timing function as needed */
+      }
+      
+      #submit:hover {
+        transform: scale(1.1); /* Adjust the scale factor as needed */
+      }
+      

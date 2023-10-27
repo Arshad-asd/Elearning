@@ -2,10 +2,12 @@
 import { Link,useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { setTutorCredentials } from '../../Redux/slices/tutorSlice/tutorAuthSlice';
+import instance from '../../Containers/Utils/axios';
+import jwt_decode from 'jwt-decode';
+
 // import { useTutorLoginMutation } from '../../../slices/tutorSlice/tutorApiSlice';
-import { tutorInstance } from "../../Containers/Utils/axios";
 
 function TutorLogin() {
 
@@ -20,12 +22,17 @@ function TutorLogin() {
  const {tutorInfo}=useSelector((state)=>state.tutorAuth)
  
 
-  useEffect(() => {
-    console.log('tutorInfo',tutorInfo)
-    if (tutorInfo) {
-      navigate("/tutor/dashboard");
-    }
-  }, [navigate, tutorInfo]);
+ useEffect(() => {
+  console.log('tutorInfo', tutorInfo);
+
+  // Add your condition here
+  const shouldNavigate = tutorInfo && tutorInfo.role === 'tutor';
+
+  if (shouldNavigate) {
+    console.log('Navigating to /tutor/dashboard');
+    navigate("/tutor/dashboard");
+  }
+}, [navigate, tutorInfo]);
 
   useEffect(()=>{
     if(Object.keys(formErrors).length==0&&isSubmit){
@@ -33,21 +40,50 @@ function TutorLogin() {
     }
   },[formErrors])
 
+  const showToast = (message, type = 'error') => {
+    toast[type](message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000, // 3 seconds
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      
+    });
+  };
+  
   const submitHandler = async (e) => {
     e.preventDefault();
-        setFormErrors(validate(email,password))
-       setIsSubmit(true)
-       try {
-         const res=await tutorInstance.post(`/token/`,{email,password})
-      
-         dispatch(setTutorCredentials({...res.data}))
+    setFormErrors(validate(email, password));
+    setIsSubmit(true);
+  
+    try {
+      const res = await instance.post(`/api/token/`, { email, password });
+  
+      try {
+        // Decoding access token
+        const decodedAccessToken = jwt_decode(res.data.access);
+        console.log("Decoded Access Token:", decodedAccessToken);
+  
+        const { role } = decodedAccessToken;
 
-         navigate('/tutor/dashboard')
-       } catch (error) {
-        console.log(error)
-        toast.error(error?.response?.data||error.error)
-       }
-    
+  
+        // Check if the role is "tutor" before navigating
+        if (role === "tutor") {
+          dispatch(setTutorCredentials({ user_id: decodedAccessToken.user_id, role, ...res.data }));
+          navigate('/tutor/dashboard');
+        } else {
+          showToast("Invalid role", 'error');
+        }
+      } catch (decodeError) {
+        console.error("Error decoding token:", decodeError.message);
+        showToast("Error decoding token", 'error');
+      }
+    } catch (error) {
+      console.error("API request error:", error);
+      showToast(error?.response?.data || error.error || "Error in API request", 'error');
+    }
   };
 
   const validate=(email,password)=>{
@@ -91,12 +127,22 @@ function TutorLogin() {
         </div>
       </form>
       <p className='text-end mt-2'>
-      <Link style={{color:"black",textDecoration:'none'}} to='/tutor/login/forgotPassword'>Forgot Password</Link> | <Link to='/tutor/signup' style={{color:"black",textDecoration:'none'}} className='ms-2'>Sign up</Link>
+      {/* <Link style={{color:"black",textDecoration:'none'}} to='/tutor/login/forgotPassword'>Forgot Password</Link> | <Link to='/tutor/signup' style={{color:"black",textDecoration:'none'}} className='ms-2'>Sign up</Link> */}
           </p>
           <p className='text-end mt-2'>
       {/* <Link style={{color:"black",textDecoration:'none'}} to='/tutor/login/otpLoginEmail' className="ms-2">Otp Login</Link> */}
       </p>
     </div>
+    <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
   </div>
   )
 }

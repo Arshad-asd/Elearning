@@ -5,10 +5,11 @@ import { GrSchedulePlay } from 'react-icons/gr';
 import React, { useState } from 'react';
 import '../../Components/Sidebar/TutorSidebar.css';
 import TutorHeader from '../Header/TutorHeader';
+import { useDispatch, useSelector } from 'react-redux';
 
 function TutorSidebar() {
   const [isIconsOnly, setIsIconsOnly] = useState(false);
-
+  const {tutorInfo}=useSelector((state)=>state.tutorAuth)
   const toggleIconsOnly = () => {
     setIsIconsOnly(!isIconsOnly);
   };
@@ -22,7 +23,7 @@ function TutorSidebar() {
   return (
     <>
      <TutorHeader />
-      <aside className={`admin-sidebar ${isIconsOnly ? 'icons-only' : ''}`}>
+      {tutorInfo && tutorInfo.role === 'tutor' && <aside className={`admin-sidebar ${isIconsOnly ? 'icons-only' : ''}`}>
         <div className="toggle-button" onClick={toggleIconsOnly}>
           {isIconsOnly ? '☰' : '✖'}
         </div>
@@ -52,7 +53,7 @@ function TutorSidebar() {
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Logout</span>
           </li>
         </ul>
-      </aside>
+      </aside> }
     </>
   );
 }
