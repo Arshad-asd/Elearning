@@ -1,6 +1,6 @@
 import { apiSlice } from "./apiSlice";
 const ADMIN_URL ='/api/admin'
-
+const baseURL = "http://127.0.0.1:8000";
 export const adminApiSlice =apiSlice.injectEndpoints({
   endpoints:(builder)  =>({
     adminLogin:builder.mutation({
@@ -12,7 +12,7 @@ export const adminApiSlice =apiSlice.injectEndpoints({
     }),
     adminLogout:builder.mutation({
       query:(data)=>({
-          url:`${ADMIN_URL}/logout`,
+          url:`${baseURL}/api/logout`,
           method:'POST',
           body:data
       })

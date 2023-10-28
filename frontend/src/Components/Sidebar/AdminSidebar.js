@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import '../../Components/Sidebar/AdminSidebar.css';
 import AdminHeader from '../../Components/Header/AdminHeader';
 import { useDispatch, useSelector } from 'react-redux';
-import { adminApiSlice } from '../../Redux/slices/adminSlice/adminApiSlice';
-
+import { adminLogout } from '../../Redux/slices/adminSlice/adminAuthSlice';
+import {adminInstance} from '../../Containers/Utils/axios';
 import { FaHome, FaUser, FaChalkboardTeacher, FaBook, FaMoneyBillAlt, FaChartBar, FaEnvelope,  FaSignOutAlt } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 import {HiOutlineCurrencyRupee} from 'react-icons/hi'
@@ -17,13 +17,21 @@ function AdminSidebar() {
   const toggleIconsOnly = () => {
     setIsIconsOnly(!isIconsOnly);
   };
-  const { adminLogout } = adminApiSlice;
+ 
   const {adminInfo}=useSelector((state)=>state.adminAuth)
   
   const dispatch=useDispatch()
    
-  const handleLogout = () => {
-   dispatch(adminLogout())
+  const handleLogout =async () => {
+    try{
+      const authToken = adminInfo.refresh;
+      const response = await adminInstance.post('/logout/');
+      dispatch(adminLogout())
+      console.log(response.data)
+    } catch(error){
+      console.error('Logout failed', error);
+    }
+   
   };
   
   return (
