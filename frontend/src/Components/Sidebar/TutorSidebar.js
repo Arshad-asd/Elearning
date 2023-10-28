@@ -1,6 +1,7 @@
 import { FaHome, FaUser, FaChalkboardTeacher, FaBook, FaMoneyBillAlt, FaChartBar, FaEnvelope,  FaSignOutAlt } from 'react-icons/fa';
 import { RiLiveLine } from 'react-icons/ri';
 import { GrSchedulePlay } from 'react-icons/gr';
+import { NavLink } from 'react-router-dom';
 
 import React, { useState } from 'react';
 import '../../Components/Sidebar/TutorSidebar.css';
@@ -28,14 +29,18 @@ function TutorSidebar() {
           {isIconsOnly ? '☰' : '✖'}
         </div>
         <ul>
+        <NavLink to='/tutor/dashboard' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
           <li>
             <FaHome className="sidebar-icon" />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Dashboard</span>
           </li>
+          </NavLink>
+          <NavLink to='/tutor/lives' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
           <li>
             <RiLiveLine className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Live class</span>
           </li>
+          </NavLink>
           <li>
             <GrSchedulePlay className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Shedules</span>
