@@ -18,6 +18,7 @@ import TutorManagement from '../admin/TutorManagement'
 import PrivateRouteAdmin from '../Utils/PrivateRouteAdmin'
 import PrivateRouteTutor from '../Utils/PrivateRouteTutor'
 import PrivateRouteUser from '../Utils/PrivateRouteUser'
+import Lives from '../tutor/Lives'
 
 
 const Routers = () => {
@@ -50,6 +51,7 @@ const Routers = () => {
             <Route path='/tutor/signup' element={<TutorRegister />}/>
             <Route path="/tutor/dashboard" element={<TutorDashboard />} />
             <Route path='/tutor/profile' element={<TutorProfile />} />
+            <Route path='/tutor/lives' element={<Lives />} />
         </Route>
     </Routes>
   )
