@@ -4,7 +4,7 @@ import AddForm from "./AddForm";
 function TutorProfile() {
   return (
     <div style={{ height: "100vh", backgroundColor: "	#fcdad1" }}>
-      <div className="container">
+      <div className="container ">
         <div className="row gutters row-with-padding">
           <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
             <div className="card h-100">
@@ -22,23 +22,23 @@ function TutorProfile() {
                   </div>
                   <div className="centered-container">
                     <div className="row-container">
-                      <div className="col">
+                      <div className="colum">
                         <i className="fas fa-edit " style={{color:"blue"}}></i>
                         <span className="icon"style={{marginLeft:"10px"}}>Edit</span>
                       </div>
-                       <div className="col">
+                       <div className="colum">
                        <i className="fas fa-certificate"style={{color:"gold"}}></i> 
                       <span className="icon"style={{marginLeft:"10px"}}>
                        Badge
                       </span>
                       </div>
-                      <div className="col">
+                      <div className="colum">
                       <i className="fas fa-eye"></i>
                       <span className="icon"style={{marginLeft:"10px"}}>
                          Views
                       </span>
                       </div>
-                      <div className="col">
+                      <div className="colum">
                       <i className="fas fa-users"></i> 
                       <span className="icon" style={{ paddingLeft: "10px" }}>
                         Followers

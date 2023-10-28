@@ -67,19 +67,19 @@ body{
         display: block;
         margin-bottom: 10px; /* Adjust the margin as needed */
       }
-      .col{
+      .colum{
         display: flex;
         justify-content: flex-start;
         padding-bottom: 10px;
        padding: 10px;
       }
-      .col:hover {
+      .colum:hover {
         border: 1px solid rgb(212, 42, 255); 
         border-radius: 10px;
         background-color: rgb(255, 171, 248);
         /* Set the desired border style and color */
       }
-      .col i:hover {
+      .colum i:hover {
         transform: scale(1.2); /* Adjust the scale factor as needed */
         transition: transform 0.3s ease; /* Adjust the duration and timing function as needed */
       }
