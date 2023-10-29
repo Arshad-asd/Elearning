@@ -1,7 +1,14 @@
-import React from "react";
+
+import React, { useState } from "react";
 import "../../../Containers/tutor/profile/Profile.css";
 import AddForm from "./AddForm";
 function TutorProfile() {
+
+  const [showForm, setShowForm] = useState(false);
+
+  const handleEditClick = () => {
+    setShowForm((prevShowForm) => !prevShowForm);
+  };
   return (
     <div style={{ height: "100vh", backgroundColor: "	#fcdad1" }}>
       <div className="container ">
@@ -22,7 +29,7 @@ function TutorProfile() {
                   </div>
                   <div className="centered-container">
                     <div className="row-container">
-                      <div className="colum">
+                      <div className="colum" onClick={handleEditClick}>
                         <i className="fas fa-edit " style={{color:"blue"}}></i>
                         <span className="icon"style={{marginLeft:"10px"}}>Edit</span>
                       </div>
@@ -50,7 +57,7 @@ function TutorProfile() {
               </div>
             </div>
           </div>
-          <AddForm />
+          {showForm && <AddForm />}
         </div>
       </div>
     </div>
