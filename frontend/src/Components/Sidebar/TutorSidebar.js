@@ -53,6 +53,12 @@ function TutorSidebar() {
             <FaEnvelope className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Messages</span>
           </li>
+          <NavLink to='/tutor/profile' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
+          <li>
+            <FaUser className="sidebar-icon" />
+            <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Profile</span>
+          </li>
+          </NavLink>
           <li className="logout-button" onClick={handleLogout}>
             <FaSignOutAlt className="sidebar-icon" />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Logout</span>
