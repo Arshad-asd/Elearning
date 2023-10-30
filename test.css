@@ -1,0 +1,47 @@
+/* home.csss*/
+
+.home-background{
+    background-color: 	#e2f6f9;
+}
+/* Add your global styles here if needed */
+
+.home-background {
+    /* Your background styles */
+  }
+  
+  /* Add styles for the Banner component if necessary */
+  
+  .home-content-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  
+  .home-content-box-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  
+  .home-content-box-item div {
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 8px;
+    border-radius: 10%;
+    display: inline-block;
+  }
+  
+  .home-content-box-item img {
+    width: 48px;
+    height: 48px;
+    margin-right: 8px;
+    border-radius: 10%;
+  }
+  
+  /* Add styles for the Card component if necessary */
+  
+  /* Add any additional styles you may need */
+  
