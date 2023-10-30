@@ -84,7 +84,7 @@ export default function UserManagement() {
   }, [blocked]);
   const handleDetailsClick = (e, row) => {
     e.stopPropagation();
-    const userId = row._id;
+    const userId = row.id;
     setModalDetails(row.details);
     setOpenModals((prevOpenModals) => ({
       ...prevOpenModals,
