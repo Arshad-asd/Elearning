@@ -69,18 +69,4 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 #<-----------------------------------------------------Bascis credentials account manage-- End ------------------------------------------------->                                  
 
 
-#<-----------------------------------------------------Plans manage-- Start ------------------------------------------------->                                  
-
-
-class Plan(models.Model):
-    type = models.CharField(max_length=15)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    is_active = models.BooleanField(default=True)
-
-class Feature(models.Model):
-    entry = models.ForeignKey(Plan, related_name='features', on_delete=models.CASCADE)
-    feature_text = models.CharField(max_length=200)
-
-
-#<-----------------------------------------------------Plans manage-- End ------------------------------------------------->                                  
 

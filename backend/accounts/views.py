@@ -15,6 +15,7 @@ from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSeri
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView ,TokenRefreshView
 # Create your views here.
+from django.db.models import Q
 
 from .models import UserAccount
 
@@ -69,11 +70,25 @@ class LogoutView(APIView):
 
 
 class UserListView(generics.ListAPIView):
-
     serializer_class = UserSerializer
+
     def get_queryset(self):
         # Filter users by the 'student' role
-        return UserAccount.objects.filter(role='student')
+        queryset = UserAccount.objects.filter(role='student')
+
+        # Get the search term from the query parameters
+        search_term = self.request.query_params.get('search', None)
+
+        # If search term is provided, filter the queryset based on it
+        if search_term:
+            queryset = queryset.filter(
+                Q(id__icontains=search_term) |
+                Q(first_name__icontains=search_term) |
+                Q(last_name__icontains=search_term) |
+                Q(email__icontains=search_term)
+            )
+
+        return queryset
 
 class BlockUnblockUserView(UpdateAPIView):
     serializer_class = UserSerializer

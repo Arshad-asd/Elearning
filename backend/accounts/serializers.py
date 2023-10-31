@@ -58,7 +58,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             phone_number=validated_data['phone_number']
         )
-
         user.set_password(validated_data['password'])
         user.save()
 
