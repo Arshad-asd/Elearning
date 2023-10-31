@@ -3,7 +3,7 @@ import '../../Containers/user/home/Home.css'
 function UserHeader() {
   return (
 
-    <header class="bg-dark py-5">
+    <header class=" py-5" style={{backgroundColor:'	#6711a3'}}>
         <div class="container px-5">
             <div class="row gx-5 justify-content-center">
                 <div class="col-lg-6">

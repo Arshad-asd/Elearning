@@ -1,11 +1,11 @@
-.course-card-container {
+.course-carde-containers {
     margin: 5rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
   }
   
-  .card {
+  .carde {
     width: 10rem;
     flex: 0 0 calc(33.33% - 20px); /* Adjust the width as needed with margin included */
     margin-bottom: 20px;
@@ -16,17 +16,17 @@
     transition: transform 0.4s ease-in-out;
   }
   
-  .card:hover {
+  .carde:hover {
     transform: translateY(-10px);
   }
-  .card-title {
+  .carde-title {
     font-size: 18px;
     font-weight: 600;
     color: #b2eccf;
     margin: 15px 0 0 10px;
   }
   
-  .card-image {
+  .carde-image {
     min-height: 170px;
     background-color: #313131;
     border-radius: 15px;
@@ -35,7 +35,7 @@
               inset -5px -5px 3px #333333;
   }
   
-  .card-body {
+  .carde-body {
     margin: 13px 0 0 10px;
     color: rgb(184, 184, 184);
     font-size: 15px;

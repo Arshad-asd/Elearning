@@ -11,12 +11,12 @@ const CourseCard = () => {
   ];
 
   return (
-    <div className="course-card-container">
+    <div className="course-carde-containers">
       {courses.map((course) => (
-        <div key={course.id} className="card">
-          <div className="card-image"></div>
-          <p className="card-title">{course.title}</p>
-          <p className="card-body">{course.description}</p>
+        <div key={course.id} className="carde">
+          <div className="carde-image"></div>
+          <p className="carde-title">{course.title}</p>
+          <p className="carde-body">{course.description}</p>
           {/* Additional card content */}
         </div>
       ))}
