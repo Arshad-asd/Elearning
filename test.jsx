@@ -191,6 +191,7 @@ function Home() {
           </Container>
         </main>
       </div>
+    
     </ThemeProvider>
   );
 }
