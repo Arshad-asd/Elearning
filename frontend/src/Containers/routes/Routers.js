@@ -19,6 +19,7 @@ import PrivateRouteAdmin from '../Utils/PrivateRouteAdmin'
 import PrivateRouteTutor from '../Utils/PrivateRouteTutor'
 import PrivateRouteUser from '../Utils/PrivateRouteUser'
 import Lives from '../tutor/Lives'
+import CategoryManagement from '../admin/CategoryManagement'
 
 
 const Routers = () => {
@@ -43,6 +44,7 @@ const Routers = () => {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path='/admin/usermanagement' element={<UserManagement />} />
             <Route path='/admin/tutormanagemet' element={<TutorManagement />} />
+            <Route path='/admin/category-management' element={<CategoryManagement />} />
         </Route>
         {/* <------- Tutor Routes -------> */}
 
