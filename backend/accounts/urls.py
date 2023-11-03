@@ -3,7 +3,7 @@ from . import views
 from .views import  TutorRegistrationView, UserRegistrationView,GetRoutesView ,LogoutView
 from .views import CustomTokenObtainPairView, CustomTokenRefreshView,UserListView,BlockUnblockUserView,TutorListView
 
-
+from course.views import CategoryCreateView,SubCategoryBulkCreateView
 
 urlpatterns = [
     path('',views.GetRoutesView.as_view(),name='getRoutes'),
@@ -16,6 +16,9 @@ urlpatterns = [
     path('admin/block-unblock/<int:pk>/', BlockUnblockUserView.as_view(), name='block-unblock-user'),
     path('tutor/tutors/', TutorListView.as_view(), name='tutor-list'),
     path('tutor/block-unblock/<int:pk>/', BlockUnblockUserView.as_view(), name='block-unblock-user'),
+
+    path('categories/create/', CategoryCreateView.as_view(), name='category_create'),
+    path('subcategories/bulk_create/', SubCategoryBulkCreateView.as_view(), name='subcategories_bulk_create'),
 
 
 

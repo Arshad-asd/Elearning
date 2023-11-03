@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
-
 #<-----------------------------------------------------Bascis credentials account manage-- Start ------------------------------------------------->                                  
 
 class UserAccountManager(BaseUserManager):
@@ -42,6 +41,15 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     display_pic = models.ImageField(upload_to='user/', null=True, blank=True, default='user/user.png')
 
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.STUDENT)
+
+    # Additional fields
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100, null=True, blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    qualification = models.CharField(max_length=200, null=True, blank=True)
+    skills = models.CharField(max_length=200, null=True, blank=True)
+    subjects = models.CharField(max_length=200, null=True, blank=True)
+    category = models.ForeignKey('course.Category', on_delete=models.SET_NULL, blank=True, null=True)
 
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)

@@ -25,11 +25,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         ]
     )
     password = serializers.CharField(write_only=True, required=True)
-    password2 = serializers.CharField(write_only=True, required=True)  # Add password2 field
+    password2 = serializers.CharField(write_only=True, required=True) 
 
     class Meta:
         model = User
-        fields = ['email', 'phone_number', 'password', 'password2']  # Include password2 field in fields
+        fields = ['email', 'phone_number', 'password', 'password2'] 
 
     def validate_password(self, password):
         # Password policy: Minimum 6 characters, at least one uppercase letter, one lowercase letter, and one digit

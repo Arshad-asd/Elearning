@@ -7,7 +7,7 @@ from accounts.models import UserAccount
 
 
 class Category(models.Model):
-    category_name = models.CharField(max_length=255)
+    category_name = models.CharField(max_length=255, unique=True)
     subscribed_count = models.IntegerField(default=0)
     image = models.ImageField(upload_to='category_images/')
     is_active = models.BooleanField(default=True)
@@ -16,7 +16,7 @@ class Category(models.Model):
         return self.category_name
 
 class SubCategory(models.Model):
-    sub_category_name = models.CharField(max_length=255)
+    sub_category_name = models.CharField(max_length=255, unique=True)
     category_ref = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -72,7 +72,7 @@ class Feature(models.Model):
 
 
 class Subscription(models.Model):
-    user_ref = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     plan_ref = models.ForeignKey(Plan, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     subscription_type = models.CharField(max_length=15)  # You might want to use choices here
