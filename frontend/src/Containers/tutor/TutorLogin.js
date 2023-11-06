@@ -133,16 +133,6 @@ function TutorLogin() {
       {/* <Link style={{color:"black",textDecoration:'none'}} to='/tutor/login/otpLoginEmail' className="ms-2">Otp Login</Link> */}
       </p>
     </div>
-    <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
   </div>
   )
 }

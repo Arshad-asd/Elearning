@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../../Containers/Utils/axios'; // Adjust the path accordingly
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import '../../Containers/user/Register.css';
 import { useNavigate } from 'react-router-dom';
 function TutorRegister() {
@@ -225,16 +224,7 @@ function TutorRegister() {
           </form>
         </div>
       </div>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+
     </div>
   );
 }
