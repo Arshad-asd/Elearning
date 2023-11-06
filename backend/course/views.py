@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import Category,SubCategory
 from .serializers import CategorySerializer,SubCategorySerializer
 from rest_framework.views import APIView
+from rest_framework.generics import UpdateAPIView
 
 
 class CategoryCreateView(generics.CreateAPIView):
@@ -45,6 +46,25 @@ class UpdateCategoryView(APIView):
             return Response({"detail": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class BlockUnblockCategoryView(UpdateAPIView):
+    serializer_class = CategorySerializer
+
+    def get_queryset(self):
+        return Category.objects.all()
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if instance:
+            instance.is_active = not instance.is_active
+            instance.save()
+
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class SubCategoryBulkCreateView(generics.CreateAPIView):

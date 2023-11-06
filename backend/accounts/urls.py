@@ -3,7 +3,7 @@ from . import views
 from .views import  TutorRegistrationView, UserRegistrationView,GetRoutesView ,LogoutView
 from .views import CustomTokenObtainPairView, CustomTokenRefreshView,UserListView,BlockUnblockUserView,TutorListView
 
-from course.views import CategoryCreateView, CategoryListAPIView,SubCategoryBulkCreateView, UpdateCategoryView
+from course.views import CategoryCreateView, CategoryListAPIView,SubCategoryBulkCreateView, UpdateCategoryView,BlockUnblockCategoryView
 
 urlpatterns = [
     path('',views.GetRoutesView.as_view(),name='getRoutes'),
@@ -19,6 +19,7 @@ urlpatterns = [
 
     path('admin/create-categories/', CategoryCreateView.as_view(), name='category_create'),
     path('admin/categories/<int:category_id>/', UpdateCategoryView.as_view(), name='update_category'),
+    path('admin/categories/block-unblock/<int:pk>/',BlockUnblockCategoryView.as_view(), name='category_block_ublock'),
 
     path('subcategories/bulk_create/', SubCategoryBulkCreateView.as_view(), name='subcategories_bulk_create'),
     path('admin/categories/', CategoryListAPIView.as_view(), name='category-list'),
