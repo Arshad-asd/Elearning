@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-
-import { AiOutlineAppstoreAdd } from "react-icons/ai";
+import { AiOutlineAppstoreAdd,AiOutlineCheckCircle } from "react-icons/ai";
 import { BiSolidEdit } from "react-icons/bi";
-
+import { FaBan, FaCheck } from "react-icons/fa";
+import {GoCheckCircleFill} from "react-icons/go";
+import {HiExclamationCircle} from "react-icons/hi"
 import { adminInstance } from "../Utils/axios";
 import "./UserManagement.css";
 import CategoryAddModal from "./modal/CategoryAddModal";
@@ -16,7 +17,7 @@ const columns = [
   {
     field: "image",
     headerName: "Image",
-    width: 130,
+    width: 200,
     renderCell: (params) => (
       <img
         src={`${params.value}`}
@@ -25,8 +26,18 @@ const columns = [
       />
     ),
   },
-  { field: "is_active", headerName: "Active", width: 130 },
-];
+  {
+    field: "is_active",
+    headerName: "Active",
+    width: 100,
+    renderCell: (params) => (
+      params.value ? (
+        <GoCheckCircleFill color="green" style={{fontSize: "24px"}} />
+      ) : (
+        <HiExclamationCircle color="red" style={{fontSize: "24px"}}/>
+      )
+    ),
+  },];
 
 const showToast = (message, type = "error") => {
   toast[type](message, {
@@ -87,13 +98,40 @@ const CategoryManagement = () => {
       console.error("Error updating category", error);
     }
   };
-  
+
+  const handleBlockUnblockCategory = async (categoryId, isBlocked) => {
+    try {
+      await adminInstance.patch(`/categories/block-unblock/${categoryId}/`, {
+        is_active: !isBlocked,
+      });
+      fetchCategories();
+      showToast(`Category ${isBlocked ? 'Unblocked' : 'Blocked'}`, "success");
+    } catch (error) {
+      showToast("Error updating category", "error");
+      console.error("Error updating category", error);
+    }
+  };
 
   const columnsWithActions = [
     ...columns,
     {
-      field: "actions",
-      headerName: "Actions",
+      field: "blockUnblock",
+      headerName: "Block/Unblock",
+      width: 150,
+      renderCell: (params) => (
+        <div>
+          <button
+            onClick={() => handleBlockUnblockCategory(params.row.id, params.row.is_active)}
+            style={{ border: "none", background: "none", cursor: "pointer" }}
+          >
+        {params.row.is_active ? <FaBan color="red" style={{ fontSize: "24px"}}/> : <AiOutlineCheckCircle color="green" style={{ fontSize: "24px"}} />}
+          </button>{" "}
+        </div>
+      ),
+    },
+    {
+      field: "edit",
+      headerName: "Edit",
       width: 130,
       renderCell: (params) => (
         <div>
@@ -101,7 +139,7 @@ const CategoryManagement = () => {
             onClick={() => handleEditCategory(params.row)}
             style={{ border: "none", background: "none", cursor: "pointer" }}
           >
-            <BiSolidEdit style={{ fontSize: '24px' ,color:"blue"}} />
+            <BiSolidEdit style={{ fontSize: "24px", color: "blue" }} />
           </button>{" "}
         </div>
       ),
@@ -142,12 +180,14 @@ const CategoryManagement = () => {
           onAddCategory={handleAddCategory}
         />
 
-<EditCategoryModal
-  isOpen={isEditModalOpen}
-  onRequestClose={() => setIsEditModalOpen(false)}
-  onUpdateCategory={(updatedData) => handleUpdateCategory(updatedData, selectedCategory.id)}
-  categoryData={selectedCategory}
-/>
+        <EditCategoryModal
+          isOpen={isEditModalOpen}
+          onRequestClose={() => setIsEditModalOpen(false)}
+          onUpdateCategory={(updatedData) =>
+            handleUpdateCategory(updatedData, selectedCategory.id)
+          }
+          categoryData={selectedCategory}
+        />
       </div>
     </div>
   );

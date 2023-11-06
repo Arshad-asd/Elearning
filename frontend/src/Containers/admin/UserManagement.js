@@ -62,7 +62,7 @@ export default function UserManagement() {
     },
   ];
 
-  const handleBlockClick = async (e, userId, isBlocked) => {
+  const handleBlockClick = async (e, userId) => {
     e.stopPropagation();
     try {
       setBlocked(!blocked);
