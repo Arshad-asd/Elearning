@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLoginMutation } from "../../Redux/slices/userSlice/userApiSlice";
 import { setCredentials } from "../../Redux/slices/userSlice/authSlice";
 import { toast } from "react-toastify";
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function UserLogin() {
   const [email, setEmail] = useState("");
@@ -133,7 +132,6 @@ function UserLogin() {
           <p></p>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 }

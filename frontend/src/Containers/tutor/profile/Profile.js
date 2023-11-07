@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import "../../../Containers/tutor/profile/Profile.css";
-import AddForm from "./AddForm";
+import EditForm from "./EditForm";
 function TutorProfile() {
 
   const [showForm, setShowForm] = useState(false);
@@ -57,7 +57,7 @@ function TutorProfile() {
               </div>
             </div>
           </div>
-          {showForm && <AddForm />}
+          {showForm && <EditForm />}
         </div>
       </div>
     </div>
