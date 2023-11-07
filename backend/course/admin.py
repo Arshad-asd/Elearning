@@ -6,7 +6,7 @@ from .models import Category, SubCategory, Course, Lesson, Plan, Feature, Subscr
 
 # Course manage
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'category_name', 'subscribed_count', 'display_image', 'is_active')
+    list_display = ('id', 'category_name', 'subscribed_count', 'display_image', 'is_active', 'subcategories_list')
     search_fields = ('category_name',)
 
     def display_image(self, obj):
@@ -14,10 +14,24 @@ class CategoryAdmin(admin.ModelAdmin):
 
     display_image.short_description = 'Image'
 
+    def subcategories_list(self, obj):
+        subcategories = SubCategory.objects.filter(category_ref=obj)
+        return ', '.join([sub.sub_category_name for sub in subcategories])
+
+    subcategories_list.short_description = 'Subcategories'
 
 
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(SubCategory)
+
+class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'sub_category_name', 'category_name', )
+    search_fields = ('sub_category_name', 'category_ref__category_name')
+
+    def category_name(self, obj):
+        return obj.category_ref.category_name
+
+    category_name.short_description = 'Category Name'
+
+admin.site.register(SubCategory, SubCategoryAdmin)
 admin.site.register(Course)
 admin.site.register(Lesson)
 

@@ -10,6 +10,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
+    category_name = serializers.ReadOnlyField(source='category_ref.category_name')
+
     class Meta:
         model = SubCategory
-        fields = ['id', 'sub_category_name']
+        fields = ['id', 'sub_category_name', 'category_name', 'is_active']

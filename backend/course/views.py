@@ -7,6 +7,13 @@ from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 
 
+
+
+class CategoryListAPIView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
 class CategoryCreateView(generics.CreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -15,6 +22,7 @@ class CategoryCreateView(generics.CreateAPIView):
         # Access data using names
         category_name = request.POST.get('categoryName', '').strip()
         image = request.FILES.get('image', None)
+        print(image,'image........................')
 
         # Check if the category name is unique
         if Category.objects.filter(category_name__iexact=category_name).exists():
@@ -31,7 +39,8 @@ class UpdateCategoryView(APIView):
     def put(self, request, category_id, *args, **kwargs):
         updated_category_data = {
             "category_name": request.data.get("categoryName"),
-            # Include other fields that you want to update
+            "image": request.data.get("image"),  # Assuming 'categoryImage' is the field name for the image
+
         }
         try:
             category = Category.objects.get(id=category_id)
@@ -67,33 +76,29 @@ class BlockUnblockCategoryView(UpdateAPIView):
             return Response({"detail": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-class SubCategoryBulkCreateView(generics.CreateAPIView):
-    queryset = SubCategory.objects.all()
-    serializer_class = SubCategorySerializer
-
-    def create(self, request, *args, **kwargs):
-        category_id = request.data.get('category_id')
-        subcategories_data = request.data.get('subcategories', [])
-
-        try:
-            category = Category.objects.get(pk=category_id)
-        except Category.DoesNotExist:
-            return Response({'detail': 'Category not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-        subcategories = []
-        for subcategory_data in subcategories_data:
-            subcategory_data['category_ref'] = category_id
-            serializer = SubCategorySerializer(data=subcategory_data)
-            if serializer.is_valid():
-                serializer.save()
-                subcategories.append(serializer.data)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({'subcategories': subcategories}, status=status.HTTP_201_CREATED)
 
 
+class SubCategoryListView(APIView):
+    def get(self, request):
+        subcategories = SubCategory.objects.all()
+        serializer = SubCategorySerializer(subcategories, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-class CategoryListAPIView(generics.ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+class SubCategoryAddView(APIView):
+    def post(self, request):
+
+        # Extract 'category_name' directly from the request data
+        category_name = request.data.get('category_name')
+
+        serializer = SubCategorySerializer(data=request.data)
+        if serializer.is_valid():
+            # Check if the category with the given name already exists
+            try:
+                category = Category.objects.get(category_name=category_name)
+            except Category.DoesNotExist:
+                return Response({'error': f'Category "{category_name}" does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer.save(category_ref=category)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

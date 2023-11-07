@@ -13,6 +13,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name' ,'role', 'phone_number', 'display_pic')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Qualifications',{'fields': ('city','state','country','qualification','skills','subjects','category')})
         # ('Important dates', {'fields': ('last_login',)}),
     )
 

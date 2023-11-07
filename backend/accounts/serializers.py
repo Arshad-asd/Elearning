@@ -69,7 +69,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token['role'] = user.role  # Assuming you have a 'role' field in your user model
+        token['role'] = user.role  
         return token
 
 class CustomTokenRefreshSerializer(TokenObtainPairSerializer):
@@ -80,6 +80,11 @@ class CustomTokenRefreshSerializer(TokenObtainPairSerializer):
         data['role'] = self.user.role
         return data
 
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'city', 'state', 'country', 'qualification', 'skills', 'subjects', 'category']
 #<------------------------------------------------------------------User-Side-End--------------------------------------------------->
 
 

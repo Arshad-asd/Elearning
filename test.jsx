@@ -1,199 +1,166 @@
+import React, { useState, useEffect } from 'react';
+import { adminInstance } from '../../Utils/axios';
+import "./CategoryAdd.css";
 
-import Typography from "@mui/material/Typography";
-import exam from "../../../assets/Exam.svg";
-import onlineTest from "../../../assets/online-test.svg";
-import certificaton from "../../../assets/certification.svg";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Banner from "./Banner";
-import "./Home.css";
+const AddSubcategoryModal = ({ isOpen, onClose, onAdd }) => {
+  const [newSubCategory, setNewSubCategory] = useState({
+    sub_category_name: '',
+    category_name: '',
+  });
+  const [categories, setCategories] = useState([]);
 
-const cards = [1, 2, 3];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await adminInstance.get('/categories/');
+        const data = response.data;
+        setCategories(data);
+      } catch (error) {
+        console.error('Error fetching categories', error);
+      }
+    };
 
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
+    fetchCategories();
+  }, []);
 
-function Home() {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewSubCategory((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleAddSubCategory = () => {
+    // Validation for sub_category_name
+    if (newSubCategory.sub_category_name.length < 3) {
+      alert('Subcategory name should be at least 3 characters');
+      return;
+    }
+
+    // Pass the new subcategory data to the onAdd function in the parent component
+    onAdd(newSubCategory);
+  };
+
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <CssBaseline />
-
-      <div className="home-background">
-        {" "}
-        {/* Apply the CSS class here */}
-        <main>
-          {/* Hero unit */}
-          <Banner />
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              backgroundColor: "#4D2C5E",
-              padding: 5,
-              margin: 17,
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-              }}
-            >
-              <div
-                style={{
-                  flex: "1",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                }}
-              >
-                <div
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.5)",
-                    padding: 8,
-                    borderRadius: "10%",
-                    display: "inline-block",
-                  }}
-                >
-                  <img
-                    src={onlineTest}
-                    alt="Computer"
-                    style={{
-                      width: 48,
-                      height: 48,
-                      marginRight: 8,
-                      borderRadius: "10%",
-                    }}
-                  />
-                </div>
-                <Typography variant="h6">Learn the latest skill</Typography>
-                <Typography variant="body2">
-                  Add more skill to your resume
-                </Typography>
-              </div>
-
-              <div
-                style={{
-                  flex: "1",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                }}
-              >
-                <div
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.5)",
-                    padding: 8,
-                    borderRadius: "10%",
-                    display: "inline-block",
-                  }}
-                >
-                  <img
-                    src={exam}
-                    alt="Career"
-                    style={{
-                      width: 48,
-                      height: 48,
-                      marginRight: 8,
-                      borderRadius: "10%",
-                    }}
-                  />
-                </div>
-                <Typography variant="h6">Get ready for the career</Typography>
-                <Typography variant="body2">
-                  Be prepared for having a high package job
-                </Typography>
-              </div>
-
-              <div
-                style={{
-                  flex: "1",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                }}
-              >
-                <div
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.5)",
-                    padding: 8,
-                    borderRadius: "10%",
-                    display: "inline-block",
-                  }}
-                >
-                  <img
-                    src={certificaton}
-                    alt="Certificate"
-                    style={{
-                      width: 48,
-                      height: 48,
-                      marginRight: 8,
-                      borderRadius: "10%",
-                    }}
-                  />
-                </div>
-                <Typography variant="h6">Earn a certificate</Typography>
-                <Typography variant="body2">
-                  Announce your achievement through your certificate
-                </Typography>
-              </div>
-            </div>
-          </Box>
-
-          <Container sx={{ py: 8 }} maxWidth="md">
-            {/* End hero unit */}
-            <Grid container spacing={4}>
-              {cards.map((card) => (
-                <Grid item key={card} xs={12} sm={6} md={4}>
-                  <Card
-                    sx={{
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <CardMedia
-                      component="div"
-                      sx={{
-                        // 16:9
-                        pt: "56.25%",
-                      }}
-                      image="https://source.unsplash.com/random?wallpapers"
-                    />
-                    <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography gutterBottom variant="h5" component="h2">
-                        UI/UX Design for Beginners
-                      </Typography>
-                      <Typography>
-                        This is a media card. You can use this section to
-                        describe the content.
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Container>
-        </main>
+    <div className={`modal ${isOpen ? 'open' : ''}`}>
+      <div className="modal-content">
+        <span className="close" onClick={onClose}>&times;</span>
+        <h2>Add Subcategory</h2>
+        <label htmlFor="sub_category_name">Subcategory Name:</label>
+        <input
+          type="text"
+          id="sub_category_name"
+          name="sub_category_name"
+          value={newSubCategory.sub_category_name}
+          onChange={handleInputChange}
+        />
+        <label htmlFor="category_name">Category Name:</label>
+        <select
+          id="category_name"
+          name="category_name"
+          value={newSubCategory.category_name}
+          onChange={handleInputChange}
+        >
+          <option value="">Select a category</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.category_name}>
+              {category.category_name}
+            </option>
+          ))}
+        </select>
+        <button onClick={handleAddSubCategory}>Add Subcategory</button>
       </div>
-    
-    </ThemeProvider>
+    </div>
   );
-}
+};
 
-export default Home;
+export default AddSubcategoryModal;
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { AiOutlineAppstoreAdd } from 'react-icons/ai';
+import { adminInstance } from '../Utils/axios';
+import AddSubcategoryModal from './modal/AddSubcategoryModal';
+
+const columns = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'sub_category_name', headerName: 'Sub_category_name', width: 200 },
+  { field: 'category_name', headerName: 'Category_name', width: 200 },
+  { field: 'is_active', headerName: 'Active', width: 200 },
+];
+
+const SubCategory = () => {
+  const [subCategories, setSubCategories] = useState([]);
+  const [isAddModalOpen, setAddModalOpen] = useState(false);
+
+  // Define fetchSubCategories outside the useEffect block
+  const fetchSubCategories = async () => {
+    try {
+      const response = await adminInstance.get('/sub-categories/');
+      const data = response.data;
+      setSubCategories(data);
+    } catch (error) {
+      console.error('Error fetching subcategories', error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch subcategories on component mount
+    fetchSubCategories();
+  }, []);
+
+  const handleAddModalOpen = () => {
+    console.log('Opening Add Modal');
+    setAddModalOpen(true);
+  };
+
+  const handleAddModalClose = () => {
+    setAddModalOpen(false);
+  };
+
+  const handleAddSubCategory = async (newSubCategory) => {
+    try {
+      // Add logic to send the new subcategory data to the backend
+      await adminInstance.post('/sub-categories/', newSubCategory);
+
+      // Refresh the subcategory list after adding
+      fetchSubCategories();
+      setAddModalOpen(false);
+    } catch (error) {
+      console.error('Error adding subcategory', error);
+    }
+  };
+
+  return (
+    <div style={{ backgroundColor: 'pink', height: '100vh' }}>
+      <div className="data-grid-container">
+        <div className="header d-flex justify-content-between align-items-center mb-4">
+          <div style={{ fontWeight: 'bold' }}>SubCategory Management</div>
+          <div className="d-flex align-items-center" onClick={handleAddModalOpen}>
+            <AiOutlineAppstoreAdd style={{ fontSize: '30px' }} /> Add
+          </div>
+        </div>
+        <DataGrid
+          rows={subCategories}
+          columns={columns}
+          pageSize={5}
+          checkboxSelection
+          sx={{ backgroundColor: 'white' }}
+        />
+      </div>
+
+      {/* Add Subcategory Modal */}
+      <AddSubcategoryModal
+        isOpen={isAddModalOpen}
+        onClose={handleAddModalClose}
+        onAdd={handleAddSubCategory}
+      />
+    </div>
+  );
+};
+
+export default SubCategory;
+
+

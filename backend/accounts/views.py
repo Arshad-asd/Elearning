@@ -4,12 +4,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import generics
-from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import UpdateAPIView,RetrieveAPIView
 
 from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
-from rest_framework.permissions import IsAuthenticated,BasePermission
-from .serializers import  TutorRegistrationSerializer, UserRegistrationSerializer 
+from rest_framework.permissions import IsAuthenticated,BasePermission,AllowAny
+from .serializers import  TutorRegistrationSerializer, UserProfileSerializer, UserRegistrationSerializer 
 from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer,UserSerializer
 
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -52,6 +52,31 @@ class CustomTokenRefreshView(TokenRefreshView):
     serializer_class = CustomTokenRefreshSerializer
 
 
+class UserProfileView(RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+class UserProfileUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        serializer = UserProfileSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        user = self.request.user
+        serializer = UserProfileSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 #<------------------------------------------------------Admin-Side-Start------------------------------------------------------------------>
