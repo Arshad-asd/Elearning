@@ -86,9 +86,11 @@ const CategoryManagement = () => {
     setSelectedCategory(category);
     setIsEditModalOpen(true);
   };
+ 
 
   const handleUpdateCategory = async (updatedCategoryData, categoryId) => {
     try {
+      console.log(updatedCategoryData,'pppppppppppppppppppppppp');
       await adminInstance.put(`/categories/${categoryId}/`, updatedCategoryData);
       fetchCategories();
       showToast("Category updated", "success");
