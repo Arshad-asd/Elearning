@@ -1,11 +1,12 @@
 
 from rest_framework import serializers
 from .models import Category,SubCategory
+from .models import Plan
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'category_name', 'subscribed_count', 'image', 'is_active']
+        fields = ['id', 'category_name', 'image', 'is_active']
 
 
 
@@ -15,3 +16,9 @@ class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
         fields = ['id', 'sub_category_name', 'category_name', 'is_active']
+
+
+class PlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = ['id', 'type', 'amount', 'is_active']
