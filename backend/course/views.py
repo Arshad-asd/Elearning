@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 
 
+#<----------------------------------------------------Category-Start---------------------------------------------------------------->
 
 
 class CategoryListAPIView(generics.ListAPIView):
@@ -80,7 +81,10 @@ class BlockUnblockCategoryView(UpdateAPIView):
         else:
             return Response({"detail": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
 
+#<----------------------------------------------------Category-End----------------------------------------------------------->
 
+
+#<----------------------------------------------------Subcategory-Start---------------------------------------------------------------->
 
 
 class SubCategoryListView(APIView):
@@ -165,7 +169,14 @@ class BlockUnblockSubCategoryView(UpdateAPIView):
         else:
             return Response({"detail": "SubCategory not found"}, status=status.HTTP_404_NOT_FOUND)
 
+#<----------------------------------------------------Subcategory-End---------------------------------------------------------------->
 
+#<----------------------------------------------------Course-Start---------------------------------------------------------------->
+
+
+#<----------------------------------------------------Course-Start---------------------------------------------------------------->
+
+#<----------------------------------------------------Plan-Start---------------------------------------------------------------->
 class PlanListView(generics.ListAPIView):
     queryset = Plan.objects.all()
     serializer_class = PlanSerializer
@@ -177,7 +188,28 @@ class PlanCreateView(APIView):
 
         # Create a new plan object
         serializer = PlanSerializer(data=data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BlockUnblockPlanView(UpdateAPIView):
+    serializer_class = PlanSerializer
+
+    def get_queryset(self):
+        return Plan.objects.all()
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if instance:
+            instance.is_active = not instance.is_active
+            instance.save()
+
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "Plan not found"}, status=status.HTTP_404_NOT_FOUND)
+
+#<----------------------------------------------------Plan-End---------------------------------------------------------------->

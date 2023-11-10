@@ -61,6 +61,10 @@ class Plan(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     is_active = models.BooleanField(default=True)
 
+    def __str__(self):
+       return self.type
+
+
 class Feature(models.Model):
     entry = models.ForeignKey(Plan, related_name='features', on_delete=models.CASCADE)
     feature_text = models.CharField(max_length=200)

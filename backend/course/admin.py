@@ -36,8 +36,37 @@ admin.site.register(Course)
 admin.site.register(Lesson)
 
 # Plans manage
-admin.site.register(Plan)
-admin.site.register(Feature)
+class PlanAdmin(admin.ModelAdmin):
+    list_display = ('type', 'amount', 'is_active', 'get_features_display')
+    list_filter = ('type', 'is_active')
+    search_fields = ('type',)
 
+    def get_features_display(self, obj):
+        # Concatenate feature texts for display
+        features = obj.features.all()
+        return ', '.join([feature.feature_text for feature in features])
+
+    get_features_display.short_description = 'Features'
+
+admin.site.register(Plan, PlanAdmin)
+@admin.register(Feature)
+class FeatureAdmin(admin.ModelAdmin):
+    list_display = ('feature_text', 'get_plan_type', 'get_plan_amount', 'get_plan_status')
+
+    def get_plan_type(self, obj):
+        # Display the plan type for the related plan
+        return obj.entry.type
+
+    def get_plan_amount(self, obj):
+        # Display the plan amount for the related plan
+        return obj.entry.amount
+
+    def get_plan_status(self, obj):
+        # Display the plan status for the related plan
+        return obj.entry.is_active
+
+    get_plan_type.short_description = 'Plan Type'
+    get_plan_amount.short_description = 'Plan Amount'
+    get_plan_status.short_description = 'Plan Status'
 # Subscriptions manage
 admin.site.register(Subscription)
