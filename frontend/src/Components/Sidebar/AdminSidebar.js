@@ -9,7 +9,9 @@ import { adminInstance } from '../../Containers/Utils/axios';
 import { FaHome, FaUser, FaChalkboardTeacher, FaBook, FaMoneyBillAlt, FaChartBar, FaEnvelope, FaSignOutAlt } from 'react-icons/fa';
 import { HiOutlineCurrencyRupee } from 'react-icons/hi';
 import {TbCategory} from 'react-icons/tb'
-import { NavLink } from 'react-router-dom';
+import { NavLink ,useNavigate} from 'react-router-dom';
+import { toast} from 'react-toastify';
+
 
 function AdminSidebar() {
   const [isIconsOnly, setIsIconsOnly] = useState(false);
@@ -25,18 +27,33 @@ function AdminSidebar() {
 
   const { adminInfo } = useSelector((state) => state.adminAuth);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      const authToken = adminInfo.refresh;
-      const response = await adminInstance.post('/logout/');
+      // const authToken = adminInfo.refresh;
+      // const response = await adminInstance.post('/logout/');
       dispatch(adminLogout());
-      console.log(response.data);
+      
+      showToast('Logout successfully','success')
+      navigate('/admin')
     } catch (error) {
       console.error('Logout failed', error);
+      showToast("Logout failed", 'error');
+
     }
   };
-
+  const showToast = (message, type = 'error') => {
+    toast[type](message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000, // 3 seconds
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      
+    });
+  };
   return (
     <>
       <AdminHeader />
@@ -64,7 +81,7 @@ function AdminSidebar() {
                 <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Tutor Management</span>
               </li>
             </NavLink>
-            <NavLink to='/admin/plan' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>
+            <NavLink to='/admin/plan-management' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>
               <li>
                 <HiOutlineCurrencyRupee className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
                 <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Plans</span>

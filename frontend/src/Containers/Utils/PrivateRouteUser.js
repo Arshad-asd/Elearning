@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 
 const PrivateRouteUser = ()=>{
     const {userInfo}=useSelector(state=>state.auth)
-    console.log(userInfo,'000000000000000000000')
     return(
         userInfo? <Outlet/>:<Navigate to ='/login'/>
     )

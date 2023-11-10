@@ -21,6 +21,8 @@ import PrivateRouteUser from '../Utils/PrivateRouteUser'
 import Lives from '../tutor/Lives'
 import CategoryManagement from '../admin/CategoryManagement'
 import SubCategory from '../admin/SubCategory'
+import PlanManagement from '../admin/PlanManagement'
+import ErrorPage from '../../Components/404Page/404Page'
 
 
 const Routers = () => {
@@ -47,6 +49,7 @@ const Routers = () => {
             <Route path='/admin/tutormanagemet' element={<TutorManagement />} />
             <Route path='/admin/category-management' element={<CategoryManagement />} />
             <Route path='/admin/subcategory' element={<SubCategory />} />
+            <Route path='/admin/plan-management/' element={<PlanManagement />} />
         </Route>
         {/* <------- Tutor Routes -------> */}
 
@@ -57,6 +60,9 @@ const Routers = () => {
             <Route path='/tutor/profile' element={<TutorProfile />} />
             <Route path='/tutor/lives' element={<Lives />} />
         </Route>
+
+        <Route path="*" element={<ErrorPage />} />
+
     </Routes>
   )
 }

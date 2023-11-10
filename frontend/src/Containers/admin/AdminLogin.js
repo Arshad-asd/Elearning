@@ -74,6 +74,7 @@ function AdminLogin() {
           // Check if the role is "admin" before navigating
           if (role === "admin") {
             dispatch(setAdminCredentials({ user_id: decodedAccessToken.user_id, role, ...res.data }));
+            showToast('success fully logined','success');
             navigate('/admin/dashboard');
           } else {
             showToast("Invalid role", 'error');
@@ -140,16 +141,7 @@ function AdminLogin() {
       <Link style={{color:"black",textDecoration:'none'}} to='/admin/otpLoginEmail' className="ms-2">Otp Login</Link>
       </p> */}
     </div>
-    <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+
   </div>
   )
 }

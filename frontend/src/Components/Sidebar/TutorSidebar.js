@@ -1,26 +1,46 @@
 import { FaHome, FaUser, FaChalkboardTeacher, FaBook, FaMoneyBillAlt, FaChartBar, FaEnvelope,  FaSignOutAlt } from 'react-icons/fa';
 import { RiLiveLine } from 'react-icons/ri';
 import { GrSchedulePlay } from 'react-icons/gr';
-import { NavLink } from 'react-router-dom';
+import { NavLink,useNavigate } from 'react-router-dom';
 
 import React, { useState } from 'react';
 import '../../Components/Sidebar/TutorSidebar.css';
 import TutorHeader from '../Header/TutorHeader';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { TutorLogout } from '../../Redux/slices/tutorSlice/tutorAuthSlice';
+import { toast} from 'react-toastify';
+
 function TutorSidebar() {
   const [isIconsOnly, setIsIconsOnly] = useState(false);
   const {tutorInfo}=useSelector((state)=>state.tutorAuth)
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
   const toggleIconsOnly = () => {
     setIsIconsOnly(!isIconsOnly);
   };
   
   
   const handleLogout = () => {
-    // Add logic for logging out
     console.log('Logout clicked');
+    showToast("logout Sucessfully",'success')
+    dispatch(TutorLogout());
+    navigate('/tutor')
+
   };
-  
+
+  const showToast = (message, type = 'error') => {
+    toast[type](message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000, // 3 seconds
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      
+    });
+  };
   return (
     <>
      <TutorHeader />
