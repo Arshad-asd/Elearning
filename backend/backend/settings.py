@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'course',
-    'subscription',
     'accounts.apps.AccountsConfig',
     'rest_framework',
     'corsheaders',
