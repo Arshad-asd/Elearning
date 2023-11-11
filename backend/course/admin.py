@@ -32,7 +32,13 @@ class SubCategoryAdmin(admin.ModelAdmin):
     category_name.short_description = 'Category Name'
 
 admin.site.register(SubCategory, SubCategoryAdmin)
-admin.site.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('id', 'course_name', 'category_ref', 'sub_category_ref', 'tutor_ref', 'views', 'likes', 'is_active')
+    list_filter = ('category_ref', 'sub_category_ref', 'tutor_ref', 'is_active')
+    search_fields = ('course_name', 'category_ref__category_name', 'sub_category_ref__sub_category_name', 'tutor_ref__username')
+    list_per_page = 20
+
+admin.site.register(Course, CourseAdmin)
 admin.site.register(Lesson)
 
 # Plans manage

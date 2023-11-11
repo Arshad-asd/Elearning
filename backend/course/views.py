@@ -1,8 +1,8 @@
 
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .models import Category, Plan,SubCategory
-from .serializers import CategorySerializer, PlanSerializer,SubCategorySerializer
+from .models import Category, Course, Feature, Plan,SubCategory
+from .serializers import CategorySerializer, CourseSerializer, FeatureSerializer, PlanSerializer,SubCategorySerializer
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 
@@ -173,6 +173,9 @@ class BlockUnblockSubCategoryView(UpdateAPIView):
 
 #<----------------------------------------------------Course-Start---------------------------------------------------------------->
 
+class CourseListView(generics.ListAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
 
 #<----------------------------------------------------Course-Start---------------------------------------------------------------->
 
@@ -211,5 +214,16 @@ class BlockUnblockPlanView(UpdateAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({"detail": "Plan not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class FeatureListView(generics.ListAPIView):
+    queryset = Feature.objects.all()
+    serializer_class = FeatureSerializer
+
+class FeatureDetailView(generics.ListAPIView):
+    serializer_class = FeatureSerializer
+
+    def get_queryset(self):
+        plan_id = self.kwargs.get('plan_id')  # Assuming the plan_id is passed in the URL
+        return Feature.objects.filter(entry_id=plan_id)
 
 #<----------------------------------------------------Plan-End---------------------------------------------------------------->

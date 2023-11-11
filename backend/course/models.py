@@ -28,7 +28,7 @@ class Course(models.Model):
     sub_category_ref = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     tutor_ref = models.ForeignKey(UserAccount, on_delete=models.CASCADE) 
     course_name = models.CharField(max_length=255)
-    preview_video = models.FileField(upload_to='course_previews/')
+    preview_video = models.FileField(upload_to='course_previews/',default='path/to/dummy/video.mp4' )
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
