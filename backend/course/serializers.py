@@ -53,10 +53,11 @@ class PlanSerializer(serializers.ModelSerializer):
         model = Plan
         fields = ['id', 'type', 'amount', 'is_active']
 
-
 class FeatureSerializer(serializers.ModelSerializer):
+    plan_name = serializers.ReadOnlyField(source='entry.type')  # Assuming 'entry' is a ForeignKey to Plan model with a 'name' field
+
     class Meta:
         model = Feature
-        fields = ['id', 'entry', 'feature_text']
+        fields = ['id', 'entry', 'feature_text', 'plan_name']
 
 #<----------------------------------------------------Plan-End---------------------------------------------------------------->

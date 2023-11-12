@@ -5,6 +5,7 @@ from .models import Category, Course, Feature, Plan,SubCategory
 from .serializers import CategorySerializer, CourseSerializer, FeatureSerializer, PlanSerializer,SubCategorySerializer
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 
 
 #<----------------------------------------------------Category-Start---------------------------------------------------------------->
@@ -226,4 +227,36 @@ class FeatureDetailView(generics.ListAPIView):
         plan_id = self.kwargs.get('plan_id')  # Assuming the plan_id is passed in the URL
         return Feature.objects.filter(entry_id=plan_id)
 
+
+class FeatureCreateView(APIView):
+    def post(self, request, *args, **kwargs):
+        # Validate if plan_name is provided in the request data
+        plan_name = request.data.get('plan_name')
+
+        if not plan_name:
+            return Response({'error': 'plan_name is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if a Plan with the given name exists
+        try:
+            plan = Plan.objects.get(type=plan_name)
+        except Plan.DoesNotExist:
+            return Response({'error': f'Plan with name "{plan_name}" does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # If Plan exists, proceed to create the Feature
+        feature_data = {
+            'entry': plan.id,
+            'feature_text': request.data.get('feature_text')
+        }
+
+        serializer = FeatureSerializer(data=feature_data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class FeatureUpdateView(RetrieveUpdateAPIView):
+    queryset = Feature.objects.all()
+    serializer_class = FeatureSerializer
 #<----------------------------------------------------Plan-End---------------------------------------------------------------->

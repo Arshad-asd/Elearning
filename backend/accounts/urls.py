@@ -3,7 +3,7 @@ from . import views
 from .views import  TutorRegistrationView, UserRegistrationView,GetRoutesView ,LogoutView,UserProfileUpdateView,UserProfileView
 from .views import CustomTokenObtainPairView, CustomTokenRefreshView,UserListView,BlockUnblockUserView,TutorListView
 
-from course.views import BlockUnblockPlanView, CategoryCreateView, CategoryListAPIView, CourseListView, FeatureDetailView, FeatureListView, PlanCreateView, PlanListView, SubCategoryEditView,SubCategoryListView, UpdateCategoryView,BlockUnblockCategoryView,SubCategoryAddView,BlockUnblockSubCategoryView
+from course.views import BlockUnblockPlanView, CategoryCreateView, CategoryListAPIView, CourseListView, FeatureCreateView, FeatureDetailView, FeatureListView, FeatureUpdateView, PlanCreateView, PlanListView, SubCategoryEditView,SubCategoryListView, UpdateCategoryView,BlockUnblockCategoryView,SubCategoryAddView,BlockUnblockSubCategoryView
 
 urlpatterns = [
     path('',views.GetRoutesView.as_view(),name='getRoutes'),
@@ -37,6 +37,8 @@ urlpatterns = [
     
     path('admin/features-list/',FeatureListView.as_view(),name="features-list"),
     path('admin/view-features/<int:plan_id>/', FeatureDetailView.as_view(), name='feature-detail'),
+    path('admin/create-feature/', FeatureCreateView.as_view(), name='create-feature'),
+    path('admin/edit-features/<int:pk>/',FeatureUpdateView.as_view(),name='edit-features'),
 
     path('admin/course-list/',CourseListView.as_view(),name='course-list'),
     #<----------------------------------------------------Admin-Sides-End---------------------------------------------------------------------------------------------->
