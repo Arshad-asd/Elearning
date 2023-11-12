@@ -23,6 +23,7 @@ import CategoryManagement from '../admin/CategoryManagement'
 import SubCategory from '../admin/SubCategory'
 import PlanManagement from '../admin/PlanManagement'
 import ErrorPage from '../../Components/404Page/404Page'
+import FeatureManagement from '../admin/FeatureManagement'
 
 
 const Routers = () => {
@@ -50,6 +51,7 @@ const Routers = () => {
             <Route path='/admin/category-management' element={<CategoryManagement />} />
             <Route path='/admin/subcategory' element={<SubCategory />} />
             <Route path='/admin/plan-management/' element={<PlanManagement />} />
+            <Route path='/admin/features/' element={<FeatureManagement />} />
         </Route>
         {/* <------- Tutor Routes -------> */}
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { FaUnlock, FaLock, FaSearch } from "react-icons/fa";
 import { BiSolidCommentAdd, BiPencil } from "react-icons/bi";
+import { AiOutlineArrowRight } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import "./UserManagement.css";
 import { adminInstance } from "../../Containers/Utils/axios";
@@ -178,10 +179,14 @@ export default function PlanManagement() {
         <div className="data-grid-container ">
           <div className="header d-flex justify-content-between align-items-center mb-4">
             <div>
-              <Link to="/live" style={{ textDecoration: "none" }}>
+              <Link
+                to="/admin/plan-management/"
+                style={{ textDecoration: "none" }}
+              >
                 PlanManagement
               </Link>
             </div>
+
             <div className="d-flex align-items-center">
               <button onClick={() => setIsAddModalOpen(true)}>
                 <BiSolidCommentAdd style={{ fontSize: "30px" }} />
@@ -196,6 +201,15 @@ export default function PlanManagement() {
             getRowId={(row) => row.id}
             sx={{ backgroundColor: "white" }}
           />
+          <div className="flex justify-end mt-4 mr-10">
+            <Link
+              to="/admin/features/"
+              className="flex items-center"
+              style={{ textDecoration: "none" }}
+            >
+              FeatureManagement <AiOutlineArrowRight />
+            </Link>
+          </div>
         </div>
 
         <PlanAddModal
