@@ -2,7 +2,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { FaUnlock, FaLock } from "react-icons/fa";
 import "./UserManagement.css";
 import { useEffect, useState } from "react";
-import { tutorInstance } from "../../Containers/Utils/axios";
+import { adminInstance } from "../../Containers/Utils/axios";
 
 // import DetailsModal from './DetailsModal';
 
@@ -72,7 +72,7 @@ export default function TutorManagement() {
     try {
       setBlocked(!blocked);
 
-      const response = await tutorInstance.patch(`/block-unblock/${ userId }/`, );
+      const response = await adminInstance.patch(`/tutor/block-unblock/${ userId }/`, );
       // fetchData();
     } catch (error) {
       console.error("Error blocking user:", error);
@@ -101,7 +101,7 @@ export default function TutorManagement() {
 
   const fetchData = async () => {
     try {
-      const res = await tutorInstance.get("tutors/");
+      const res = await adminInstance.get("/tutors/");
       console.log("Response:", res.data); // Log the response to the console
       setRows(res.data);
     } catch (error) {

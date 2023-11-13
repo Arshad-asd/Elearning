@@ -102,10 +102,12 @@ function AdminSidebar() {
                 </li>
               </ul>
             )}
+            <NavLink to='/admin/coursemanagement/' style={{ textDecoration: 'none', color: 'black' }}>
             <li>
               <FaBook className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
               <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Courses</span>
             </li>
+            </NavLink>
             <li>
               <FaMoneyBillAlt className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
               <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Subscription</span>
