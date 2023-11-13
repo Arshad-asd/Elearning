@@ -1,9 +1,12 @@
 import React from 'react'
+import CourseHeader from '../../../Components/Header/CourseHeader'
+import CategorySection from '../../../Components/Sections/CategorySection'
 
 function Course() {
   return (
-    <div className='container ' style={{height:'100vh'}}>
-    <div className='d-flex justify-content-center align-items-center'> course</div>
+    <div  style={{ height: '100vh' }}>
+      <CourseHeader />
+      <CategorySection />
   </div>
   )
 }
