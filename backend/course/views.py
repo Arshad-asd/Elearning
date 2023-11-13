@@ -2,19 +2,30 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Category, Course, Feature, Plan,SubCategory
-from .serializers import CategorySerializer, CourseSerializer, FeatureSerializer, PlanSerializer,SubCategorySerializer
+from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, PlanSerializer,SubCategorySerializer
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import ListAPIView
 
 
 #<----------------------------------------------------Category-Start---------------------------------------------------------------->
 
-
+#Admin side
 class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+#User side
+class CustomPageNumberPagination(PageNumberPagination):
+    page_size = 4  # Number of items per page
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+class UserCategoryListAPIView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    pagination_class = CustomPageNumberPagination
 
 class CategoryCreateView(generics.CreateAPIView):
     queryset = Category.objects.all()
@@ -170,13 +181,68 @@ class BlockUnblockSubCategoryView(UpdateAPIView):
         else:
             return Response({"detail": "SubCategory not found"}, status=status.HTTP_404_NOT_FOUND)
 
+
+class SubCategoryListView(APIView): # subcategory list correspond category id
+    def get(self, request, category_id, format=None):
+        try:
+            subcategories = SubCategory.objects.filter(category_ref=category_id)
+            serializer = SubCategorySerializer(subcategories, many=True)
+            return Response(serializer.data)
+        except SubCategory.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 #<----------------------------------------------------Subcategory-End---------------------------------------------------------------->
 
 #<----------------------------------------------------Course-Start---------------------------------------------------------------->
 
+#admin side
 class CourseListView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+#User side
+# class CourseListPagination(PageNumberPagination):
+#     page_size = 4
+#     page_size_query_param = 'page_size'
+#     max_page_size = 100
+
+class CourseListAPIView(generics.ListAPIView):
+    serializer_class = CourseSerializer
+
+    def get_queryset(self):
+        sub_category_ref_id = self.request.query_params.get('sub_category_ref', None)
+        
+        if sub_category_ref_id:
+            # Filter courses based on sub_category_ref_id
+            queryset = Course.objects.filter(sub_category_ref=sub_category_ref_id)
+        else:
+            # If no sub_category_ref_id is provided, return all courses
+            queryset = Course.objects.all()
+
+        return queryset
+    # pagination_class = CourseListPagination
+
+
+class CourseCreateAPIView(generics.CreateAPIView):
+    serializer_class = AddCourseSerializer
+
+
+class BlockUnblockCourseView(UpdateAPIView):
+    serializer_class = CourseSerializer
+
+    def get_queryset(self):
+        return Course.objects.all()
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if instance:
+            instance.is_active = not instance.is_active
+            instance.save()
+
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "SubCategory not found"}, status=status.HTTP_404_NOT_FOUND)
 
 #<----------------------------------------------------Course-Start---------------------------------------------------------------->
 

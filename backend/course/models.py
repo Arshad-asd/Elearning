@@ -29,6 +29,8 @@ class Course(models.Model):
     tutor_ref = models.ForeignKey(UserAccount, on_delete=models.CASCADE) 
     course_name = models.CharField(max_length=255)
     preview_video = models.FileField(upload_to='course_previews/',default='path/to/dummy/video.mp4' )
+    banner_image = models.ImageField(upload_to='course_banners/', default='path/to/default/banner.jpg')
+
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)

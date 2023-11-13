@@ -7,11 +7,13 @@ from .models import Plan
 
 
 #<----------------------------------------------------Category-Start---------------------------------------------------------------->
-
+#Admin side
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'category_name', 'image', 'is_active']
+
+
 
 #<----------------------------------------------------Category-End----------------------------------------------------------->
 
@@ -35,13 +37,19 @@ class UserAccountSerializer(serializers.ModelSerializer):
         fields = ['id', 'email']
 
 class CourseSerializer(serializers.ModelSerializer):
-    category_ref = CategorySerializer()
-    sub_category_ref = SubCategorySerializer()
-    tutor_ref = UserAccountSerializer()
+    category_ref = CategorySerializer(required=False)
+    sub_category_ref = SubCategorySerializer(required=False)
+    tutor_ref = UserAccountSerializer(required=False)
 
     class Meta:
         model = Course
         fields = '__all__'
+
+class AddCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = '__all__'
+
 
 #<----------------------------------------------------Course-End---------------------------------------------------------------->
 
