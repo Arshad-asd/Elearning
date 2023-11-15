@@ -39,7 +39,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=200, null=True, blank=True)
     last_name = models.CharField(max_length=200, null=True, blank=True)
     display_pic = models.ImageField(upload_to='user/', null=True, blank=True, default='user/user.png')
-
+    subscription_plan = models.CharField(max_length=20, blank=True, null=True)
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.STUDENT)
 
     # Additional fields

@@ -2,7 +2,7 @@
 from rest_framework import serializers
 
 from accounts.models import UserAccount
-from .models import Category, Course, Feature,SubCategory
+from .models import Category, Course, Feature,SubCategory, Subscription
 from .models import Plan
 
 
@@ -69,3 +69,15 @@ class FeatureSerializer(serializers.ModelSerializer):
         fields = ['id', 'entry', 'feature_text', 'plan_name']
 
 #<----------------------------------------------------Plan-End---------------------------------------------------------------->
+
+#<----------------------------------------------------Subscription-Start---------------------------------------------------------------->
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = '__all__'
+        extra_kwargs = {
+            'expire_date': {'required': False},
+        }
+
+#<----------------------------------------------------Subscription-End---------------------------------------------------------------->

@@ -1,13 +1,21 @@
 
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .models import Category, Course, Feature, Plan,SubCategory
-from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, PlanSerializer,SubCategorySerializer
+
+from accounts.models import UserAccount
+from .models import Category, Course, Feature, Plan,SubCategory, Subscription
+from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, PlanSerializer,SubCategorySerializer, SubscriptionSerializer
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListAPIView
+
+
+from django.utils.decorators import method_decorator
+from decouple import config  # Import config from python-decouple
+import razorpay
 
 
 #<----------------------------------------------------Category-Start---------------------------------------------------------------->
@@ -326,3 +334,105 @@ class FeatureUpdateView(RetrieveUpdateAPIView):
     queryset = Feature.objects.all()
     serializer_class = FeatureSerializer
 #<----------------------------------------------------Plan-End---------------------------------------------------------------->
+
+#<----------------------------------------------------Subscription-Start---------------------------------------------------------------->
+
+#User Side
+
+def get_plan_type(plan_id):
+    try:
+        plan = Plan.objects.get(id=plan_id)
+        return plan.type  
+    except Plan.DoesNotExist:
+        return None
+
+
+from django.utils import timezone
+from datetime import timedelta
+
+def calculate_expire_date(plan_type):
+    # Implement the logic to calculate expire_date based on plan type
+    if plan_type == 'Basic':
+        return timezone.now() + timedelta(days=30)
+    elif plan_type == 'Medium':
+        return timezone.now() + timedelta(days=365)
+    else:
+        # Handle the case where plan_type is not recognized
+        raise ValueError(f"Unsupported plan type: {plan_type}")
+
+class SubscriptionCreateView(generics.CreateAPIView):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        plan_id = serializer.validated_data['plan_ref'].id
+        amount = serializer.validated_data['amount']
+        user_id = serializer.validated_data['user_ref'].id
+
+        # Calculate expire_date based on plan type
+        plan_type = get_plan_type(plan_id)
+        expire_date = calculate_expire_date(plan_type)
+
+        # Create the Subscription object
+        subscription_data = {
+            'user_ref': user_id,
+            'plan_ref': plan_id,
+            'amount': amount,
+            'subscription_type': plan_type,
+        }
+
+        # Add expire_date to subscription_data only if it is not None
+        if expire_date is not None:
+            subscription_data['expire_date'] = expire_date
+
+        # Update the UserAccount model with the current subscription plan
+        user_account = get_object_or_404(UserAccount, id=user_id)
+        user_account.subscription_plan = plan_type
+        user_account.save()
+
+        serializer = SubscriptionSerializer(data=subscription_data)
+        serializer.is_valid(raise_exception=True)
+        subscription = serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+#<----------------------------------------------------Subscription-End---------------------------------------------------------------->
+
+#<----------------------------------------------------Payment-Gateway-Start---------------------------------------------------------------->
+
+class RazorpayOrderView(APIView):
+
+    # @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            plan_id = request.data.get('planId')
+            amount = request.data.get('amount')
+
+
+            # Initialize Razorpay client with environment variables
+            client = razorpay.Client(auth=(config('RAZORPAY_KEY_ID'), config('RAZORPAY_KEY_SECRET')))
+            # Create a Razorpay order
+            order_params = {
+                'amount': float(amount) * 100,  # Amount in paise
+                'currency': 'INR',
+                'receipt': 'receipt_id',  # Replace with a unique identifier for the order
+                'payment_capture': 1,
+                'notes': {
+                    'plan_id': plan_id,
+                    'key':config('RAZORPAY_KEY_ID'),
+                },
+            }
+            print(order_params,'kkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
+
+            order = client.order.create(data=order_params)
+
+            return Response(order, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#<----------------------------------------------------Payment-Gateway-End---------------------------------------------------------------->

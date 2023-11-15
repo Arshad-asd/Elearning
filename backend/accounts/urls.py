@@ -3,19 +3,27 @@ from . import views
 from .views import  TutorRegistrationView, UserRegistrationView,GetRoutesView ,LogoutView,UserProfileUpdateView,UserProfileView
 from .views import CustomTokenObtainPairView, CustomTokenRefreshView,UserListView,BlockUnblockUserView,TutorListView
 
-from course.views import BlockUnblockCourseView, BlockUnblockPlanView, CategoryCreateView, CategoryListAPIView, CourseCreateAPIView, CourseListAPIView, CourseListView, FeatureCreateView, FeatureDetailView, FeatureListView, FeatureUpdateView, PlanCreateView, PlanListView, SubCategoryEditView,SubCategoryListView, UpdateCategoryView,BlockUnblockCategoryView,SubCategoryAddView,BlockUnblockSubCategoryView, UserCategoryListAPIView 
+from course.views import BlockUnblockCourseView, BlockUnblockPlanView, CategoryCreateView, CategoryListAPIView, CourseCreateAPIView, CourseListAPIView, CourseListView, FeatureCreateView, FeatureDetailView, FeatureListView, FeatureUpdateView, PlanCreateView, PlanListView, RazorpayOrderView, SubCategoryEditView,SubCategoryListView, SubscriptionCreateView, UpdateCategoryView,BlockUnblockCategoryView,SubCategoryAddView,BlockUnblockSubCategoryView, UserCategoryListAPIView 
 
 urlpatterns = [
     path('',views.GetRoutesView.as_view(),name='getRoutes'),
-    #<----------------------------------------------------User-Sides-Start-------------------------------------------------------------------------->
-    path('user/register/', UserRegistrationView.as_view(), name='user-registration'),
-    path('tutor/register/', TutorRegistrationView.as_view(), name='tutor_register'),
+
+    #<----------------------------------------------------Login & Refresh-for-user,admin,tutor-Side-Start-------------------------------------------------------------------------->
+
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
+
+    #<----------------------------------------------------Login & Refresh-for-user,admin,tutor-Side-End-------------------------------------------------------------------------->
+
+    #<----------------------------------------------------User-Sides-Start-------------------------------------------------------------------------->
+    path('user/register/', UserRegistrationView.as_view(), name='user-registration'),
     path('user/category-list/',UserCategoryListAPIView.as_view(),name="user-category-list"),
     path('user/subcategory-list/<int:category_id>/',SubCategoryListView.as_view(),name="user-subcategory-list"),
     path('user/course-list/', CourseListAPIView.as_view(), name='course-list'),
     path('user/plans/',PlanListView.as_view(),name="user-plans"),
+    path('user/subscription/create/', SubscriptionCreateView.as_view(), name='create-subscription'),
+    path('user/create-razorpay-order/', RazorpayOrderView.as_view(), name='create_razorpay_order'),
+
     #<-----------------------------------------------------User-Sides-End--------------------------------------------------------------------------------------->
     
     #<-----------------------------------------------------Admin-Sides-Start---------------------------------------------------------------------------------------->
@@ -52,7 +60,7 @@ urlpatterns = [
     #<----------------------------------------------------Admin-Sides-End---------------------------------------------------------------------------------------------->
     
     #<----------------------------------------------------Tutor-Sides-Start---------------------------------------------------------------------------------------------->
-
+    path('tutor/register/', TutorRegistrationView.as_view(), name='tutor_register'),
     path('tutor/update-profile/', UserProfileUpdateView.as_view(), name="update-user"),
     path('tutor/user-profile/<int:id>/', UserProfileView.as_view(), name='user-profile'),
 

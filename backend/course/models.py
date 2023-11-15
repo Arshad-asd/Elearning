@@ -1,4 +1,6 @@
+from datetime import timedelta
 from django.db import models
+from django.utils import timezone
 
 from accounts.models import UserAccount
 
@@ -84,11 +86,11 @@ class Subscription(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     subscription_type = models.CharField(max_length=15)  # You might want to use choices here
     purchase_date = models.DateTimeField(auto_now_add=True)
-    expire_date = models.DateTimeField()
+    expire_date = models.DateTimeField(default=timezone.now() + timedelta(days=365))
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.user_ref.username}'s Subscription"
+        return f"{self.user_ref.email}'s Subscription"
 
     class Meta:
         ordering = ['-purchase_date']
