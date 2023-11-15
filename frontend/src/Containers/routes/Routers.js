@@ -25,6 +25,7 @@ import PlanManagement from '../admin/PlanManagement'
 import ErrorPage from '../../Components/404Page/404Page'
 import FeatureManagement from '../admin/FeatureManagement'
 import CourseManagement from '../admin/CourseManagement'
+import SuccessPage from '../../Components/Sections/SuccessPage'
 
 
 const Routers = () => {
@@ -41,6 +42,7 @@ const Routers = () => {
             <Route path='/plans' element={<Plan />} />
             <Route path='/service' element={<Service />} />
             <Route path='/courses' element={<Course />} />
+            <Route path='/success' element={<SuccessPage />} />
         </Route>
         {/* <------- Admin Routes -------> */}
   
