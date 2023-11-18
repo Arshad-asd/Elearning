@@ -69,7 +69,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token['role'] = user.role  
+        token['role'] = user.role 
+        token['email'] = user.email
+        token['type'] = user.subscription_plan 
         return token
 
 class CustomTokenRefreshSerializer(TokenObtainPairSerializer):

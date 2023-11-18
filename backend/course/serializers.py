@@ -51,6 +51,22 @@ class AddCourseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = '__all__'
+
+    def update(self, instance, validated_data):
+        instance.course_name = validated_data.get('course_name', instance.course_name)
+
+        # Check if preview_video is provided and not empty before updating
+        preview_video = validated_data.get('preview_video', None)
+        if preview_video:
+            instance.preview_video = preview_video
+
+        instance.save()
+        return instance
+
 #<----------------------------------------------------Course-End---------------------------------------------------------------->
 
 
@@ -80,4 +96,11 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             'expire_date': {'required': False},
         }
 
+class SubscriptionListSerializer(serializers.ModelSerializer):
+    user_ref = UserAccountSerializer()
+    plan_ref = PlanSerializer() 
+
+    class Meta:
+        model = Subscription
+        fields = '__all__'
 #<----------------------------------------------------Subscription-End---------------------------------------------------------------->

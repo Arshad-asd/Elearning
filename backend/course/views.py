@@ -5,12 +5,13 @@ from rest_framework.response import Response
 
 from accounts.models import UserAccount
 from .models import Category, Course, Feature, Plan,SubCategory, Subscription
-from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, PlanSerializer,SubCategorySerializer, SubscriptionSerializer
+from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, PlanSerializer,SubCategorySerializer, SubscriptionListSerializer, SubscriptionSerializer
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
 
 
 from django.utils.decorators import method_decorator
@@ -106,7 +107,7 @@ class BlockUnblockCategoryView(UpdateAPIView):
 
 #<----------------------------------------------------Subcategory-Start---------------------------------------------------------------->
 
-
+#Admin Side
 class SubCategoryListView(APIView):
     def get(self, request):
         subcategories = SubCategory.objects.all()
@@ -189,8 +190,8 @@ class BlockUnblockSubCategoryView(UpdateAPIView):
         else:
             return Response({"detail": "SubCategory not found"}, status=status.HTTP_404_NOT_FOUND)
 
-
-class SubCategoryListView(APIView): # subcategory list correspond category id
+#User side
+class CSubCategoryListView(APIView): # subcategory list correspond category id 
     def get(self, request, category_id, format=None):
         try:
             subcategories = SubCategory.objects.filter(category_ref=category_id)
@@ -252,6 +253,27 @@ class BlockUnblockCourseView(UpdateAPIView):
         else:
             return Response({"detail": "SubCategory not found"}, status=status.HTTP_404_NOT_FOUND)
 
+
+#Tutor side course list
+class TutorCoursesListView(generics.ListAPIView):
+    serializer_class = CourseSerializer
+    permission_classes = [IsAuthenticated]  # Adjust permissions as needed
+
+    def get_queryset(self):
+        # Get the tutor's ID from the authenticated user
+        tutor_id = self.request.user.id  # Assuming the tutor is the authenticated user
+        return Course.objects.filter(tutor_ref_id=tutor_id, is_active=True)
+
+class CourseUpdateView(UpdateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 #<----------------------------------------------------Course-Start---------------------------------------------------------------->
 
 #<----------------------------------------------------Plan-Start---------------------------------------------------------------->
@@ -337,8 +359,14 @@ class FeatureUpdateView(RetrieveUpdateAPIView):
 
 #<----------------------------------------------------Subscription-Start---------------------------------------------------------------->
 
-#User Side
+#Tutor side
+class SubscriptionListView(ListAPIView):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionListSerializer
 
+
+
+#User Side
 def get_plan_type(plan_id):
     try:
         plan = Plan.objects.get(id=plan_id)
