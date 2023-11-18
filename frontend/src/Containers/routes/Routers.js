@@ -26,6 +26,9 @@ import ErrorPage from '../../Components/404Page/404Page'
 import FeatureManagement from '../admin/FeatureManagement'
 import CourseManagement from '../admin/CourseManagement'
 import SuccessPage from '../../Components/Sections/SuccessPage'
+import TutorCourseManagement from '../tutor/course/TutorCourseManagement'
+import SubscriptionManagement from '../admin/SubscriptionManagement'
+import Playlist from '../user/course/PlayList'
 
 
 const Routers = () => {
@@ -43,6 +46,7 @@ const Routers = () => {
             <Route path='/service' element={<Service />} />
             <Route path='/courses' element={<Course />} />
             <Route path='/success' element={<SuccessPage />} />
+            <Route path="/playlist" element={<Playlist />} />
         </Route>
         {/* <------- Admin Routes -------> */}
   
@@ -56,6 +60,7 @@ const Routers = () => {
             <Route path='/admin/coursemanagement/' element={<CourseManagement />} />
             <Route path='/admin/plan-management/' element={<PlanManagement />} />
             <Route path='/admin/features/' element={<FeatureManagement />} />
+            <Route path='/admin/subscription' element={<SubscriptionManagement />} />
         </Route>
         {/* <------- Tutor Routes -------> */}
 
@@ -65,6 +70,8 @@ const Routers = () => {
             <Route path="/tutor/dashboard" element={<TutorDashboard />} />
             <Route path='/tutor/profile' element={<TutorProfile />} />
             <Route path='/tutor/lives' element={<Lives />} />
+            <Route path='/tutor/courses' element={<TutorCourseManagement />} />
+            
         </Route>
 
         <Route path="*" element={<ErrorPage />} />

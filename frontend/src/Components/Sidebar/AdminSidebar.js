@@ -108,11 +108,13 @@ function AdminSidebar() {
               <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Courses</span>
             </li>
             </NavLink>
+            
+            <NavLink to='/admin/subscription' style={{ textDecoration: 'none', color: 'black' }}>
             <li>
               <FaMoneyBillAlt className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
               <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Subscription</span>
             </li>
-
+            </NavLink>
             {/* New li tags with corresponding icons */}
             <li>
               <FaChartBar className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />

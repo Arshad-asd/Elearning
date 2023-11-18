@@ -61,13 +61,16 @@ function TutorSidebar() {
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Live class</span>
           </li>
           </NavLink>
+          
+          <NavLink to='/tutor/courses' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
           <li>
-            <GrSchedulePlay className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
-            <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Shedules</span>
-          </li>
-          <li>
-            <FaBook className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
+          <FaBook className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Courses</span>
+          </li>
+          </NavLink>
+          <li>
+           <GrSchedulePlay className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
+            <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Shedules</span>
           </li>
           <li>
             <FaEnvelope className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
