@@ -53,7 +53,7 @@ const CategorySection = () => {
   };
 
   return (
-    <section className="py-5">
+    <section className="py-5" >
       <div className="container px-4 px-lg-5 mt-5">
       <div className="flex justify-center items-center mb-8">
           <h1 className="text-3xl font-bold">Categories</h1>
