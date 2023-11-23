@@ -11,7 +11,7 @@ import TutorLogin from '../tutor/TutorLogin'
 import UserManagement from '../admin/UserManagement'
 import Profile from '../user/profile/Profile'
 import Plan from '../user/plan/Plan'
-import Service from '../user/service/Service'
+import UserLives from '../user/service/Lives'
 import Course from '../user/course/Course'
 import TutorProfile from '../tutor/profile/Profile'
 import TutorManagement from '../admin/TutorManagement'
@@ -43,7 +43,7 @@ const Routers = () => {
             <Route path="/" element={<Home />}/>
             <Route path='/profile' element={<Profile />} />
             <Route path='/plans' element={<Plan />} />
-            <Route path='/service' element={<Service />} />
+            <Route path='/service' element={<UserLives />} />
             <Route path='/courses' element={<Course />} />
             <Route path='/success' element={<SuccessPage />} />
             <Route path="/playlist" element={<Playlist />} />
