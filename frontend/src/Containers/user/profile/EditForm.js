@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./Profile.css";
+import "../../tutor/profile/Profile.css";
+import instance from "../../Utils/axios";
 import { tutorInstance } from "../../Utils/axios";
 import { toast } from "react-toastify";
 
@@ -18,13 +19,13 @@ function EditForm() {
   const [categories, setCategories] = useState([]);
 
   // Fetch the token from localStorage
-  const userId = localStorage.getItem("tutorInfo")
-    ? JSON.parse(localStorage.getItem("tutorInfo")).user_id
+  const userId = localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo")).user_id
     : null;
-  const token = localStorage.getItem("tutorInfo")
-    ? JSON.parse(localStorage.getItem("tutorInfo")).access
+  const token = localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo")).access
     : null;
-
+console.log(userId,'idddddddddd')
   const showToast = (message, type = "error") => {
     toast[type](message, {
       position: toast.POSITION.TOP_RIGHT,
@@ -44,7 +45,7 @@ function EditForm() {
 
   const handleSubmit = async () => {
     try {
-      await tutorInstance.put(`/update-profile/`, formData, {
+      await instance.put(`/api/user/update-profile/`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,7 +61,7 @@ function EditForm() {
     const fetchUserData = async () => {
       try {
         // Fetch user data
-        const response = await tutorInstance.get(`/user-profile/${userId}/`, {
+        const response = await instance.get(`/api/user/user-profile/${userId}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
