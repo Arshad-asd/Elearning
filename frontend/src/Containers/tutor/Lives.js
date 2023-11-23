@@ -20,11 +20,14 @@ function Lives() {
 
       {/* Cards Row */}
       <div className='row mt-3'>
-        <div className='col'>
-          <LiveCard />
-        </div>
-        <div className='col'></div>
-        {/* You can add more columns for additional cards */}
+      <div className='container grid grid-cols-4'>
+      <LiveCard />
+      <LiveCard />
+      <LiveCard />
+      <LiveCard />
+      <LiveCard />
+      <LiveCard />
+      </div>
       </div>
     </div>
     </div>
