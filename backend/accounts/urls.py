@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import  TutorRegistrationView, UserRegistrationView,GetRoutesView ,LogoutView,UserProfileUpdateView,UserProfileView
+from .views import  TutorRegistrationView, UserDetialiView, UserRegistrationView,GetRoutesView ,LogoutView,UserProfileUpdateView,UserProfileView
 from .views import CustomTokenObtainPairView, CustomTokenRefreshView,UserListView,BlockUnblockUserView,TutorListView
 
 from course.views import BlockUnblockCourseView, BlockUnblockPlanView, CSubCategoryListView, CategoryCreateView, CategoryListAPIView, CourseCreateAPIView, CourseListAPIView, CourseListView, CourseUpdateView, FeatureCreateView, FeatureDetailView, FeatureListView, FeatureUpdateView, PlanCreateView, PlanListView, RazorpayOrderView, SubCategoryEditView,SubCategoryListView, SubscriptionCreateView, SubscriptionListView, TutorCoursesListView, UpdateCategoryView,BlockUnblockCategoryView,SubCategoryAddView,BlockUnblockSubCategoryView, UserCategoryListAPIView 
@@ -17,6 +17,11 @@ urlpatterns = [
 
     #<----------------------------------------------------User-Sides-Start-------------------------------------------------------------------------->
     path('user/register/', UserRegistrationView.as_view(), name='user-registration'),
+    path('user/update-profile/', UserProfileUpdateView.as_view(), name='user-registration'),
+    path('user/user-profile/<int:id>/', UserProfileView.as_view(), name='user-profile'),
+    path('user/detail-view/<int:id>/',UserDetialiView.as_view(),name='user-detail-view'),
+
+   
     path('user/category-list/',UserCategoryListAPIView.as_view(),name="user-category-list"),
     path('user/subcategory-list/<int:category_id>/',CSubCategoryListView.as_view(),name="user-subcategory-list"),
     path('user/course-list/', CourseListAPIView.as_view(), name='course-list'),
@@ -68,6 +73,7 @@ urlpatterns = [
     path('tutor/user-profile/<int:id>/', UserProfileView.as_view(), name='user-profile'),
     path('tutor/courses/', TutorCoursesListView.as_view(), name='tutor-courses-list'),
     path('tutor/edit-course/<int:pk>/', CourseUpdateView.as_view(), name='course-update'),
+    path('tutor/categories/', CategoryListAPIView.as_view(), name='category-list'),
 
     #<----------------------------------------------------Tutor-Sides-End---------------------------------------------------------------------------------------------->
 

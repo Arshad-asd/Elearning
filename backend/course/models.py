@@ -48,6 +48,22 @@ class Lesson(models.Model):
     def __str__(self):
         return self.lesson_name
 
+
+class LiveClass(models.Model):
+    STATUS_CHOICES = (
+        ('scheduled', 'Scheduled'),
+        ('ongoing', 'Ongoing'),
+        ('completed', 'Completed'),
+    )
+
+    title = models.CharField(max_length=255)
+    start_time = models.TimeField()
+    date = models.DateField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='scheduled')
+    access_code = models.CharField(max_length=10, unique=True)
+    course_ref = models.ForeignKey(Course, on_delete=models.CASCADE)
+    tutor_ref = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+
 #<-----------------------------------------------------Course manage-- End ------------------------------------------------->                                  
 
 

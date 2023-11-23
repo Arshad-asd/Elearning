@@ -55,10 +55,16 @@ class CustomTokenRefreshView(TokenRefreshView):
 class UserProfileView(RetrieveAPIView):
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
-
+    
     def get_object(self):
         return self.request.user
 
+class UserDetialiView(RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        return self.request.user
 
 class UserProfileUpdateView(APIView):
     permission_classes = [IsAuthenticated]

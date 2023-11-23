@@ -2,7 +2,7 @@
 from rest_framework import serializers
 
 from accounts.models import UserAccount
-from .models import Category, Course, Feature,SubCategory, Subscription
+from .models import Category, Course, Feature, LiveClass,SubCategory, Subscription
 from .models import Plan
 
 
@@ -67,8 +67,18 @@ class CourseSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 #<----------------------------------------------------Course-End---------------------------------------------------------------->
 
+#<----------------------------------------------------Live-Start---------------------------------------------------------------->
+
+class LiveClassSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LiveClass
+        fields = ('id', 'title', 'start_time', 'date', 'status', 'access_code', 'course_ref', 'tutor_ref')
+#<----------------------------------------------------Live-Start---------------------------------------------------------------->
+
+#<----------------------------------------------------Live-Start---------------------------------------------------------------->
 
 #<----------------------------------------------------Plan-Start---------------------------------------------------------------->
 

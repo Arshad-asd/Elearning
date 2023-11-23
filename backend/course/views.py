@@ -4,8 +4,8 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from accounts.models import UserAccount
-from .models import Category, Course, Feature, Plan,SubCategory, Subscription
-from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, PlanSerializer,SubCategorySerializer, SubscriptionListSerializer, SubscriptionSerializer
+from .models import Category, Course, Feature, LiveClass, Plan,SubCategory, Subscription
+from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, LiveClassSerializer, PlanSerializer,SubCategorySerializer, SubscriptionListSerializer, SubscriptionSerializer
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.generics import RetrieveUpdateAPIView
@@ -275,6 +275,20 @@ class CourseUpdateView(UpdateAPIView):
         self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
 #<----------------------------------------------------Course-Start---------------------------------------------------------------->
+
+#<----------------------------------------------------Live-Start---------------------------------------------------------------->
+
+class LiveClassListCreateView(generics.ListCreateAPIView):
+    queryset = LiveClass.objects.all()
+    serializer_class = LiveClassSerializer
+    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+
+    def create(self, request, *args, **kwargs):
+        # Automatically set the tutor_ref to the authenticated user
+        request.data['tutor_ref'] = request.user.id
+        return super().create(request, *args, **kwargs)
+
+#<----------------------------------------------------Live-Start---------------------------------------------------------------->
 
 #<----------------------------------------------------Plan-Start---------------------------------------------------------------->
 class PlanListView(generics.ListAPIView):
