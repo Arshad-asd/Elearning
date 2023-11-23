@@ -57,23 +57,23 @@ function TutorSidebar() {
           </NavLink>
           <NavLink to='/tutor/lives' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
           <li>
-            <RiLiveLine className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
+            <RiLiveLine className={`sidebar-icon ${isIconsOnly ? '' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Live class</span>
           </li>
           </NavLink>
           
           <NavLink to='/tutor/courses' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
           <li>
-          <FaBook className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
+          <FaBook className={`sidebar-icon ${isIconsOnly ? '' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Courses</span>
           </li>
           </NavLink>
           <li>
-           <GrSchedulePlay className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
+           <GrSchedulePlay className={`sidebar-icon ${isIconsOnly ? '' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Shedules</span>
           </li>
           <li>
-            <FaEnvelope className={`sidebar-icon ${isIconsOnly ? 'hidden' : ''}`} />
+            <FaEnvelope className={`sidebar-icon ${isIconsOnly ? '' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Messages</span>
           </li>
           <NavLink to='/tutor/profile' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
