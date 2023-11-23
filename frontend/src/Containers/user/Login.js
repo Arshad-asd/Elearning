@@ -6,6 +6,8 @@ import { useLoginMutation } from "../../Redux/slices/userSlice/userApiSlice";
 import { setCredentials } from "../../Redux/slices/userSlice/authSlice";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import jwt_decode from 'jwt-decode';
+
 function UserLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +19,18 @@ function UserLogin() {
   const [login] = useLoginMutation();
   const { userInfo } = useSelector((state) => state.auth || {});
 
+  const showToast = (message, type = 'error') => {
+    toast[type](message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000, // 3 seconds
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      
+    });
+  };
   useEffect(() => {
     if (userInfo) {
       navigate("/");
@@ -35,10 +49,23 @@ function UserLogin() {
     try {
       const res = await login({ email, password }).unwrap();
       console.log("res", res);
-      dispatch(setCredentials({ ...res }));
-      navigate("/");
+      try {
+        const decodedAccessToken = jwt_decode(res.access);
+        console.log("Decoded Access Token:", decodedAccessToken);
+      
+        const { role, type } = decodedAccessToken;
+        dispatch(setCredentials({ user_id: decodedAccessToken.user_id, role, type, ...res}));
+        navigate("/");
+        showToast("Success fully logined", 'success');
+
+      } catch (decodeError) {
+        console.error("Error decoding token:", decodeError.message);
+        showToast("Error decoding token", 'error');
+      }
+      
+
     } catch (err) {
-      toast.error(err?.data || err?.error);
+      showToast(err?.data || err?.error);
     }
   };
 
@@ -50,6 +77,9 @@ function UserLogin() {
       errors.email = "Email is required";
     } else if (!regex.test(email)) {
       errors.email = "This is an invalid email";
+      showToast("This is an invalid email", 'error');
+
+      
     }
     if (!password) {
       errors.password = "Password is required";
