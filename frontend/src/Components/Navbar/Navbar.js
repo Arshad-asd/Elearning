@@ -1,12 +1,28 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import "./Navbar.css";
 import img from "../../assets/ElearningLogo.svg";
 import {MdOutlineLogout} from 'react-icons/md';
+import { logout } from "../../Redux/slices/userSlice/authSlice"; 
+import { toast} from 'react-toastify';
+
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentActive, setCurrentActive] = useState(null);
+  const dispatch = useDispatch();
+  const showToast = (message, type = 'error') => {
+    toast[type](message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000, // 3 seconds
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      
+    });
+  };
   const handleMobileMenuClick = () => {
     setMobileMenuOpen((prevState) => !prevState);
   };
@@ -16,6 +32,10 @@ const Navbar = () => {
     setCurrentActive(index);
   };
 
+  const handleLogout = () =>{
+  dispatch(logout())
+  showToast('logout sucessfully','success')
+  }
   const navLinks = [
     { id: 1, text: 'Home', path: '/' },
     { id: 4, text: 'Service', path: '/service' },
@@ -62,8 +82,9 @@ const Navbar = () => {
             {userInfo ? (
               // If user is logged in, show the Logout button
               <li>
-                <button  className="logout-buttons">
-                      <MdOutlineLogout />
+                <button  className="logout-buttons rounded-lg" onClick={handleLogout}>
+                      <MdOutlineLogout className="ml-2"/>
+                      
               </button>
               </li>
             ) : (
