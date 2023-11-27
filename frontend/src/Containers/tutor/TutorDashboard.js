@@ -22,7 +22,7 @@ function TutorDashboard() {
       {/* Cards Row */}
       <div className='row mt-3'>
         <div className='col'>
-          <LiveCard />
+          contents here
         </div>
         <div className='col'></div>
         {/* You can add more columns for additional cards */}
