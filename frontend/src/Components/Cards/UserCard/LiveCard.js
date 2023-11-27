@@ -3,7 +3,7 @@ import { Card, Button } from 'react-bootstrap';
 
 const LiveCard = () => {
   return (
-    <Card style={{ width: '18rem', backgroundColor:'#edf7f7'}}>
+    <Card style={{ margin:'8px', backgroundColor:'#edf7f7'}}>
       <Card.Body>
         <Card.Title className="fw-bold">Introduction about Python</Card.Title>
         <Card.Text>
