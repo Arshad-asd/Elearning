@@ -37,7 +37,7 @@ const {first_name} = userData
     <div style={{ height: "100vh", backgroundColor: "	#fcdad1" }}>
       <div className="container ">
         <div className="row gutters row-with-padding">
-          <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+          <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 "style={{ height: "60vh", backgroundColor: "	#fcdad1" }}>
             <div className="card h-100">
               <div className="card-body">
                 <div className="account-settings">
@@ -88,6 +88,7 @@ const {first_name} = userData
             </div>
           </div>
           {showForm ? <EditForm /> : <SubscriptionDetails />}
+
         </div>
       </div>
     </div>
