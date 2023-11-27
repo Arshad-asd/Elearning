@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from accounts.models import UserAccount
 from .models import Category, Course, Feature, LiveClass, Plan,SubCategory, Subscription
-from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, LiveClassSerializer, PlanSerializer,SubCategorySerializer, SubscriptionListSerializer, SubscriptionSerializer
+from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, LiveClassSerializer, PlanSerializer,SubCategorySerializer, SubscriptionListSerializer, SubscriptionSerializer, TutorLiveListSerializer
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.generics import RetrieveUpdateAPIView
@@ -286,7 +286,17 @@ class LiveClassListCreateView(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         # Automatically set the tutor_ref to the authenticated user
         request.data['tutor_ref'] = request.user.id
+        print(request.data,'live dataaaaaaaaaaaaaaa')
         return super().create(request, *args, **kwargs)
+
+class TutorLiveListView(generics.ListAPIView):
+    serializer_class = TutorLiveListSerializer
+    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+
+    def get_queryset(self):
+        # Get the tutor's live classes based on the authenticated user
+        tutor_id = self.request.user.id
+        return LiveClass.objects.filter(tutor_ref=tutor_id)
 
 #<----------------------------------------------------Live-Start---------------------------------------------------------------->
 
@@ -440,6 +450,17 @@ class SubscriptionCreateView(generics.CreateAPIView):
         subscription = serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+#user correspond subscription detail list
+
+class SubscriptionListView(generics.ListAPIView):
+    serializer_class = SubscriptionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Filter subscriptions for the currently authenticated user
+        return Subscription.objects.filter(user_ref=self.request.user)
 
 #<----------------------------------------------------Subscription-End---------------------------------------------------------------->
 

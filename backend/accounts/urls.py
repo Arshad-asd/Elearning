@@ -3,7 +3,7 @@ from . import views
 from .views import  TutorRegistrationView, UserDetialiView, UserRegistrationView,GetRoutesView ,LogoutView,UserProfileUpdateView,UserProfileView
 from .views import CustomTokenObtainPairView, CustomTokenRefreshView,UserListView,BlockUnblockUserView,TutorListView
 
-from course.views import BlockUnblockCourseView, BlockUnblockPlanView, CSubCategoryListView, CategoryCreateView, CategoryListAPIView, CourseCreateAPIView, CourseListAPIView, CourseListView, CourseUpdateView, FeatureCreateView, FeatureDetailView, FeatureListView, FeatureUpdateView, PlanCreateView, PlanListView, RazorpayOrderView, SubCategoryEditView,SubCategoryListView, SubscriptionCreateView, SubscriptionListView, TutorCoursesListView, UpdateCategoryView,BlockUnblockCategoryView,SubCategoryAddView,BlockUnblockSubCategoryView, UserCategoryListAPIView 
+from course.views import BlockUnblockCourseView, BlockUnblockPlanView, CSubCategoryListView, CategoryCreateView, CategoryListAPIView, CourseCreateAPIView, CourseListAPIView, CourseListView, CourseUpdateView, FeatureCreateView, FeatureDetailView, FeatureListView, FeatureUpdateView, LiveClassListCreateView, PlanCreateView, PlanListView, RazorpayOrderView, SubCategoryEditView,SubCategoryListView, SubscriptionCreateView, SubscriptionListView, TutorCoursesListView, TutorLiveListView, UpdateCategoryView,BlockUnblockCategoryView,SubCategoryAddView,BlockUnblockSubCategoryView, UserCategoryListAPIView 
 
 urlpatterns = [
     path('',views.GetRoutesView.as_view(),name='getRoutes'),
@@ -28,6 +28,8 @@ urlpatterns = [
     path('user/plans/',PlanListView.as_view(),name="user-plans"),
     path('user/subscription/create/', SubscriptionCreateView.as_view(), name='create-subscription'),
     path('user/create-razorpay-order/', RazorpayOrderView.as_view(), name='create_razorpay_order'),
+    path('user/subscriptions/', SubscriptionListView.as_view(), name='subscription-list'),
+
 
     #<-----------------------------------------------------User-Sides-End--------------------------------------------------------------------------------------->
     
@@ -74,6 +76,8 @@ urlpatterns = [
     path('tutor/courses/', TutorCoursesListView.as_view(), name='tutor-courses-list'),
     path('tutor/edit-course/<int:pk>/', CourseUpdateView.as_view(), name='course-update'),
     path('tutor/categories/', CategoryListAPIView.as_view(), name='category-list'),
+    path('tutor/create-live/',LiveClassListCreateView.as_view(),name='tutor-create-live'),
+    path('tutor/lives-list/', TutorLiveListView.as_view(), name='tutor-live-list'),
 
     #<----------------------------------------------------Tutor-Sides-End---------------------------------------------------------------------------------------------->
 

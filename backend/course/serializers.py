@@ -75,8 +75,16 @@ class CourseSerializer(serializers.ModelSerializer):
 class LiveClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = LiveClass
-        fields = ('id', 'title', 'start_time', 'date', 'status', 'access_code', 'course_ref', 'tutor_ref')
-#<----------------------------------------------------Live-Start---------------------------------------------------------------->
+        fields = ['id', 'title', 'start_time', 'date', 'status', 'access_code', 'course_ref', 'tutor_ref']
+
+class TutorLiveListSerializer(serializers.ModelSerializer):
+    course_name = serializers.ReadOnlyField(source='course_ref.course_name')
+    start_time = serializers.DateTimeField(format="%I:%M %p")
+    class Meta:
+        model = LiveClass
+
+        fields = ('id', 'title', 'start_time', 'date', 'status', 'access_code', 'course_ref', 'course_name')
+#<----------------------------------------------------Live-End---------------------------------------------------------------->
 
 #<----------------------------------------------------Live-Start---------------------------------------------------------------->
 

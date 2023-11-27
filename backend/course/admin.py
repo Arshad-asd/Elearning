@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Category, SubCategory, Course, Lesson, Plan, Feature, Subscription
+from .models import Category, LiveClass, SubCategory, Course, Lesson, Plan, Feature, Subscription
 
 
 
@@ -75,4 +75,5 @@ class FeatureAdmin(admin.ModelAdmin):
     get_plan_amount.short_description = 'Plan Amount'
     get_plan_status.short_description = 'Plan Status'
 # Subscriptions manage
-admin.site.register(Subscription)
+
+admin.site.register(LiveClass)
