@@ -54,20 +54,7 @@ class AddCourseSerializer(serializers.ModelSerializer):
 class UpdateCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = '__all__'
-
-    def update(self, instance, validated_data):
-        instance.course_name = validated_data.get('course_name', instance.course_name)
-
-        # Check if preview_video is provided and not empty before updating
-        preview_video = validated_data.get('preview_video', None)
-        if preview_video:
-            instance.preview_video = preview_video
-
-        instance.save()
-        return instance
-
-
+        fields = ['course_name', 'preview_video']
 #<----------------------------------------------------Course-End---------------------------------------------------------------->
 
 #<----------------------------------------------------Live-Start---------------------------------------------------------------->

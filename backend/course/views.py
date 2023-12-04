@@ -274,16 +274,32 @@ class TutorCoursesListView(generics.ListAPIView):
         tutor_id = self.request.user.id  # Assuming the tutor is the authenticated user
         return Course.objects.filter(tutor_ref_id=tutor_id, is_active=True)
 
-class CourseUpdateView(UpdateAPIView):
-    queryset = Course.objects.all()
-    serializer_class = UpdateCourseSerializer
+class CourseUpdateView(APIView):
+    def patch(self, request, course_id, *args, **kwargs):
+        print(request.data,'request')
+        try:
+            course = Course.objects.get(id=course_id)
+            updated_course_data = {
+                "course_name": request.data.get("course_name"),
+            }
 
-    def partial_update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            preview_video = request.data.get("preview_video")
+            if preview_video is not None:
+                if not isinstance(preview_video, str):
+                    updated_course_data["preview_video"] = preview_video
+
+            serializer = UpdateCourseSerializer(course, data=updated_course_data, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except Course.DoesNotExist:
+            return Response({"detail": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
 #<----------------------------------------------------Course-Start---------------------------------------------------------------->
 
 #<----------------------------------------------------Live-Start---------------------------------------------------------------->
