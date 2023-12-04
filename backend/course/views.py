@@ -2,10 +2,12 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.response import Response
-
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.utils import timezone
+from datetime import datetime, date
 from accounts.models import UserAccount
-from .models import Category, Course, Feature, LiveClass, Plan,SubCategory, Subscription
-from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, LiveClassSerializer, PlanSerializer,SubCategorySerializer, SubscriptionListSerializer, SubscriptionSerializer, TutorLiveListSerializer
+from .models import Category, Course, Feature, Lesson, LiveClass, Plan,SubCategory, Subscription
+from .serializers import AddCourseSerializer, CategorySerializer, CourseSerializer, FeatureSerializer, LessonSerializer, CreateLiveClassSerializer, LiveClassSerializer, PlanSerializer,SubCategorySerializer, SubscriptionListSerializer, SubscriptionSerializer, TutorLessonSerializer, TutorLiveListSerializer, UpdateCourseSerializer
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.generics import RetrieveUpdateAPIView
@@ -190,7 +192,7 @@ class BlockUnblockSubCategoryView(UpdateAPIView):
         else:
             return Response({"detail": "SubCategory not found"}, status=status.HTTP_404_NOT_FOUND)
 
-#User side
+#User side and admin side
 class CSubCategoryListView(APIView): # subcategory list correspond category id 
     def get(self, request, category_id, format=None):
         try:
@@ -202,6 +204,14 @@ class CSubCategoryListView(APIView): # subcategory list correspond category id
 #<----------------------------------------------------Subcategory-End---------------------------------------------------------------->
 
 #<----------------------------------------------------Course-Start---------------------------------------------------------------->
+
+#User side
+
+class CourseDetailView(generics.RetrieveAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    lookup_field = 'id'  # Use the 'id' field for looking up instances
+
 
 #admin side
 class CourseListView(generics.ListAPIView):
@@ -266,7 +276,7 @@ class TutorCoursesListView(generics.ListAPIView):
 
 class CourseUpdateView(UpdateAPIView):
     queryset = Course.objects.all()
-    serializer_class = CourseSerializer
+    serializer_class = UpdateCourseSerializer
 
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -280,7 +290,7 @@ class CourseUpdateView(UpdateAPIView):
 
 class LiveClassListCreateView(generics.ListCreateAPIView):
     queryset = LiveClass.objects.all()
-    serializer_class = LiveClassSerializer
+    serializer_class = CreateLiveClassSerializer
     permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
 
     def create(self, request, *args, **kwargs):
@@ -298,7 +308,106 @@ class TutorLiveListView(generics.ListAPIView):
         tutor_id = self.request.user.id
         return LiveClass.objects.filter(tutor_ref=tutor_id)
 
+class ListLiveClassesTodayView(APIView):
+    def get(self, request, *args, **kwargs):
+        current_date = timezone.now().date()
+
+        live_classes_today = LiveClass.objects.filter(date=current_date)
+
+        serializer = TutorLiveListSerializer(live_classes_today, many=True)
+
+        return Response(serializer.data)
+
+class UpdateLiveClassStatusView(generics.UpdateAPIView):
+    queryset = LiveClass.objects.all()
+    serializer_class = LiveClassSerializer
+
+    def partial_update(self, request, *args, **kwargs):
+        # Override partial_update to update only the 'status' field
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(status=request.data.get('status', instance.status))
+        return super().partial_update(request, *args, **kwargs)
+
+#User side
+
+class UserLiveClassListView(generics.ListAPIView):
+   
+    serializer_class = LiveClassSerializer
+    def get_queryset(self):
+        today_date = date.today()
+        # Filter only those LiveClass objects with status other than 'completed'
+        return LiveClass.objects.exclude(status='completed')
+
 #<----------------------------------------------------Live-Start---------------------------------------------------------------->
+
+#<----------------------------------------------------Lessons-Start---------------------------------------------------------------->
+
+#Tutor side
+class LessonCreateView(generics.CreateAPIView):
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Get the lessons based on the authenticated tutor
+        tutor_id = self.request.user.id
+        return Lesson.objects.filter(tutor_ref=tutor_id)
+
+
+class TutorLessonsListView(generics.ListAPIView):
+    serializer_class = TutorLessonSerializer
+    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+
+    def get_queryset(self):
+        # Get the tutor's lessons classes based on the authenticated user
+        tutor_id = self.request.user.id
+        return Lesson.objects.filter(tutor_ref=tutor_id)
+
+
+class LessonUpdateView(APIView):
+    def patch(self, request, pk, *args, **kwargs):
+        try:
+            lesson = Lesson.objects.get(id=pk)
+
+            updated_lesson_data = {
+                "lesson_name": request.data.get("lesson_name"),
+                # Add other fields as needed
+            }
+
+            thumbnail_image = request.data.get("thumbnail_image")
+            if not isinstance(thumbnail_image, str):
+                updated_lesson_data["thumbnail_image"] = thumbnail_image
+
+            lesson_video = request.data.get("lesson_video")
+            if not isinstance(lesson_video, str):
+                updated_lesson_data["lesson_video"] = lesson_video
+
+            serializer = LessonSerializer(lesson, data=updated_lesson_data, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except Lesson.DoesNotExist:
+            return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
+
+#User side
+
+class LessonListView(generics.ListAPIView):
+    serializer_class = LessonSerializer
+
+    def get_queryset(self):
+        course_id = self.kwargs.get('course_id')
+        return Lesson.objects.filter(course_ref__id=course_id)
+
+ 
+
+#<----------------------------------------------------Lessons-End---------------------------------------------------------------->
 
 #<----------------------------------------------------Plan-Start---------------------------------------------------------------->
 class PlanListView(generics.ListAPIView):
@@ -383,7 +492,7 @@ class FeatureUpdateView(RetrieveUpdateAPIView):
 
 #<----------------------------------------------------Subscription-Start---------------------------------------------------------------->
 
-#Tutor side
+#Admin side
 class SubscriptionListView(ListAPIView):
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionListSerializer
@@ -454,7 +563,7 @@ class SubscriptionCreateView(generics.CreateAPIView):
 
 #user correspond subscription detail list
 
-class SubscriptionListView(generics.ListAPIView):
+class UserSubscriptionListView(generics.ListAPIView):
     serializer_class = SubscriptionSerializer
     permission_classes = [IsAuthenticated]
 

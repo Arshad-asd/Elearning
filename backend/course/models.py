@@ -43,7 +43,9 @@ class Course(models.Model):
 class Lesson(models.Model):
     lesson_name = models.CharField(max_length=255)
     lesson_video = models.FileField(upload_to='lesson_videos/')
+    thumbnail_image = models.ImageField(upload_to='course_banners/', default='path/to/default/banner.jpg')
     course_ref = models.ForeignKey(Course, on_delete=models.CASCADE)
+    tutor_ref = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='lessons')
 
     def __str__(self):
         return self.lesson_name

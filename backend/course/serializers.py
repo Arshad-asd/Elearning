@@ -2,7 +2,7 @@
 from rest_framework import serializers
 
 from accounts.models import UserAccount
-from .models import Category, Course, Feature, LiveClass,SubCategory, Subscription
+from .models import Category, Course, Feature, Lesson, LiveClass,SubCategory, Subscription
 from .models import Plan
 
 
@@ -51,7 +51,7 @@ class AddCourseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CourseSerializer(serializers.ModelSerializer):
+class UpdateCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
@@ -72,7 +72,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
 #<----------------------------------------------------Live-Start---------------------------------------------------------------->
 
-class LiveClassSerializer(serializers.ModelSerializer):
+class CreateLiveClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = LiveClass
         fields = ['id', 'title', 'start_time', 'date', 'status', 'access_code', 'course_ref', 'tutor_ref']
@@ -84,9 +84,28 @@ class TutorLiveListSerializer(serializers.ModelSerializer):
         model = LiveClass
 
         fields = ('id', 'title', 'start_time', 'date', 'status', 'access_code', 'course_ref', 'course_name')
+
+class LiveClassSerializer(serializers.ModelSerializer):
+    start_time = serializers.DateTimeField(format="%I:%M %p")
+    class Meta:
+        model = LiveClass
+        fields = ['id', 'title', 'start_time', 'date', 'status', 'access_code', 'course_ref', 'tutor_ref']
 #<----------------------------------------------------Live-End---------------------------------------------------------------->
 
-#<----------------------------------------------------Live-Start---------------------------------------------------------------->
+#<----------------------------------------------------Lessons-Start---------------------------------------------------------------->
+class LessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ['id', 'lesson_name', 'lesson_video', 'thumbnail_image', 'course_ref','tutor_ref']
+
+class TutorLessonSerializer(serializers.ModelSerializer):
+    
+    course_ref = CourseSerializer(required=False)
+
+    class Meta:
+        model = Lesson
+        fields = '__all__'
+#<----------------------------------------------------Lessons-End---------------------------------------------------------------->
 
 #<----------------------------------------------------Plan-Start---------------------------------------------------------------->
 
