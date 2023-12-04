@@ -1,96 +1,80 @@
-// EditCourseModal.js
-
+// EditCourseModal.jsx
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { FaTimes, FaTrash } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 import { FcAddImage } from "react-icons/fc";
-import { toast } from 'react-toastify';
+import { FaTrash } from "react-icons/fa";
 
 Modal.setAppElement("#root");
 
-export default function EditCourseModal({
-  isOpen,
-  onRequestClose,
-  onUpdateCourse,
-  courseData
-}) {
-  const [formError, setFormError] = useState({});
-  const [courseName, setCourseName] = useState(courseData?.course_name || "");
-  const [selectedPreviewVideo, setSelectedPreviewVideo] = useState(null);
+const EditCourseModal = ({ isOpen, onRequestClose, onUpdateCourse, courseData }) => {
+  const [updatedCourseData, setUpdatedCourseData] = useState({
+    course_name: "",
+    preview_video: null,
+  });
+
+  const [errors, setErrors] = useState({
+    course_name: "",
+    preview_video: "",
+  });
 
   useEffect(() => {
-    setCourseName(courseData?.course_name || "");
+    setUpdatedCourseData({
+      course_name: courseData?.course_name || "",
+      preview_video: courseData?.preview_video || null,
+    });
   }, [courseData]);
 
-  const handleUpdateCourse = async (e) => {
-    e.preventDefault();
-    const errors = validate(courseName);
-    setFormError(errors);
+  const handleInputChange = (name, value) => {
+    setUpdatedCourseData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
+  };
 
-    if (Object.keys(errors).length === 0) {
-      try {
-        const updatedCourseData = new FormData();
-        updatedCourseData.append('course_name', courseName);
+  const handleFileDelete = (name) => {
+    setUpdatedCourseData((prevData) => ({
+      ...prevData,
+      [name]: null,
+    }));
+  };
 
-        if (selectedPreviewVideo) {
-          updatedCourseData.append('preview_video', selectedPreviewVideo);
-        }
+  const getFilePreview = (file) => {
+    return file ? (typeof file === "string" ? file : URL.createObjectURL(file)) : null;
+  };
 
-        updatedCourseData.append('courseId', courseData.id);
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
 
-        const response = await onUpdateCourse(updatedCourseData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+    if (!updatedCourseData.course_name.trim()) {
+      newErrors.course_name = "Please enter a course name.";
+      isValid = false;
+    }
 
-        if (response === null) {
-          setCourseName("");
-          setFormError({});
-          setSelectedPreviewVideo(null);
-          onRequestClose();
-          showToast('Course updated successfully!', 'success');
-        }
-      } catch (error) {
-        console.error('Error updating course:', error.response.data);
-        showToast('Error updating course', 'error');
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleUpdate = () => {
+    if (validateForm()) {
+      const formData = new FormData();
+      formData.append("course_name", updatedCourseData.course_name);
+  
+      // Check if preview_video is not null before appending to avoid issues
+      if (updatedCourseData.preview_video !== null) {
+        formData.append("preview_video", updatedCourseData.preview_video);
       }
+  
+      onUpdateCourse(formData);
+      onRequestClose();
     }
   };
-
-  const handlePreviewVideoChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedPreviewVideo(file);
-  };
-
-  const handleRemovePreviewVideo = () => {
-    setSelectedPreviewVideo(null);
-  };
-
-  const validate = (courseName) => {
-    const errors = {};
-
-    if (!courseName) {
-      errors.courseName = "Course name is required";
-    } else if (courseName.length < 3) {
-      errors.courseName = "Enter at least 3 characters";
-    }
-
-    return errors;
-  };
-
-  const showToast = (message, type = 'error') => {
-    toast[type](message, {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
-
+  
   return (
     <Modal
       isOpen={isOpen}
@@ -99,79 +83,89 @@ export default function EditCourseModal({
       className="custom-modal"
       overlayClassName="custom-overlay"
     >
-      <div className="modal-content p-4">
-        <div className="header">
-          <div className="close-icon" onClick={onRequestClose}>
-            <FaTimes className="text-gray-500 hover:text-red-500 cursor-pointer" />
-          </div>
+      <div className="flex justify-end">
+        <button className="cursor-pointer" onClick={onRequestClose}>
+          <IoMdClose size={24} />
+        </button>
+      </div>
+      <h2>Edit Course</h2>
+      <form className="grid grid-cols-2 gap-4">
+        <div className="mb-4 col-span-2">
+          <label className="block">
+            Course Name:
+            <input
+              type="text"
+              name="course_name"
+              value={updatedCourseData.course_name}
+              onChange={(e) => handleInputChange("course_name", e.target.value)}
+              className="w-full border p-2 rounded"
+            />
+            {errors.course_name && (
+              <p className="text-red-500">{errors.course_name}</p>
+            )}
+          </label>
         </div>
-        <h2 className="text-3xl font-bold mt-4">Edit Course</h2>
-        <input
-          type="text"
-          placeholder="Course Name"
-          value={courseName}
-          onChange={(e) => setCourseName(e.target.value)}
-          className="w-full border rounded p-2 mt-2"
-        />
-        <span className="text-red-500">
-          {formError?.courseName ? formError.courseName : ""}
-        </span>
 
-        <div className="preview-video-input mt-4">
-          {/* Preview Video Preview */}
-          {selectedPreviewVideo ? (
-            <div className="preview-video-preview-container" style={{ display: "flex", justifyContent: "space-between" }}>
-              <video
-                width="100%"
-                height="100%"
-                controls
-              >
-                <source src={typeof selectedPreviewVideo === 'string' ? selectedPreviewVideo : URL.createObjectURL(selectedPreviewVideo)} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              <div
-                className="remove-preview-video text-red-500 cursor-pointer"
-                onClick={handleRemovePreviewVideo}
-              >
-                <FaTrash />
-              </div>
-            </div>
+        <div className="mb-4">
+          {updatedCourseData.preview_video ? (
+            <>
+              <FaTrash
+                size={24}
+                onClick={() => handleFileDelete("preview_video")}
+                className="cursor-pointer text-red-500"
+              />
+              <label className="block">
+                Preview Video:
+                <div className="flex justify-center items-center">
+                  <div className="flex items-center">
+                    <video
+                      src={getFilePreview(updatedCourseData.preview_video)}
+                      alt="Preview Video"
+                      className="mr-2 w-24 h-24"
+                      controls
+                    />
+                  </div>
+                </div>
+              </label>
+            </>
           ) : (
-            // Upload Preview Video Button
-            <div
-              style={{
-                color: "#fff",
-                padding: "8px 12px",
-                borderRadius: "5px",
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-              }}
-              onClick={() => document.getElementById("editCoursePreviewVideo").click()}
-            >
-              <FcAddImage
-                style={{ marginRight: "5px", height: "100px", width: "100px" }}
-              />
-              <input
-                type="file"
-                id="editCoursePreviewVideo"
-                accept=".mp4"
-                onChange={handlePreviewVideoChange}
-                style={{ display: "none" }}
-              />
-            </div>
+            <label className="block">
+              Preview Video:
+              <div className="flex justify-center items-center">
+                <div className="flex items-center">
+                  <FcAddImage size={65} className="mr-2" />
+                  <label className="flex items-center">
+                    <input
+                      type="file"
+                      accept="video/*"
+                      name="preview_video"
+                      onChange={(e) =>
+                        handleInputChange("preview_video", e.target.files[0])
+                      }
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              </div>
+            </label>
+          )}
+          {errors.preview_video && (
+            <p className="text-red-500">{errors.preview_video}</p>
           )}
         </div>
 
-        <div className="buttonDiv mt-4">
-          <button
-            onClick={handleUpdateCourse}
-            className="add-button bg-blue-500 text-white px-4 py-2 rounded cursor-pointer mx-auto"
-          >
-            Update
-          </button>
-        </div>
-      </div>
+        {/* Add other fields as needed */}
+
+        <button
+          type="button"
+          onClick={handleUpdate}
+          className="bg-blue-500 text-white px-4 py-2 rounded col-span-2"
+        >
+          Update Course
+        </button>
+      </form>
     </Modal>
   );
-}
+};
+
+export default EditCourseModal;

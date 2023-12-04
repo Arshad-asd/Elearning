@@ -42,12 +42,15 @@ const TutorCourseManagement = () => {
   const handleEditCourse = (course) => {
     setSelectedCourse(course || {});
     setIsEditModalOpen(true);
-    console.log(selectedCourse,'edittttttttttttttt')
   };
 
   const handleUpdateCourse = async (updatedCourseData, courseId) => {
     try {
-      await tutorInstance.patch(`/edit-course/${courseId}/`, updatedCourseData);
+      await tutorInstance.patch(`/edit-course/${courseId}/`, updatedCourseData ,{
+        headers: {
+        'Content-Type': 'multipart/form-data',
+      },});
+
       fetchCourses();
       showToast("Course updated", "success");
       setIsEditModalOpen(false);
@@ -56,6 +59,7 @@ const TutorCourseManagement = () => {
       console.error("Error updating course", error);
     }
   };
+  
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
