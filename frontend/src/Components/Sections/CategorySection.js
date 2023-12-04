@@ -79,8 +79,7 @@ const CategorySection = () => {
                       href="#"
                       onClick={() => handleCategoryClick(category)}
                     >
-                      View Course
-                    </a>
+                      View SubCategories </a>
                   </div>
                 </div>
               </div>

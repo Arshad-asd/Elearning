@@ -1,7 +1,7 @@
 import "../../Containers/admin/AdminDashboard.css";
 import { Link } from "react-router-dom";
-import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
+import React, { useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
 
 function AdminDashboard() {
   const chartRef = useRef(null);
@@ -11,7 +11,7 @@ function AdminDashboard() {
 
   useEffect(() => {
     // Get the context of the canvas element for the first chart (Doughnut Chart)
-    const ctx = chartRef.current.getContext('2d');
+    const ctx = chartRef.current.getContext("2d");
 
     const dataForm = ["user", "tutor", "subscribser"];
     const userCount = 10;
@@ -46,7 +46,7 @@ function AdminDashboard() {
     chartInstance.current = new Chart(ctx, config);
 
     // Get the context of the canvas element for the second chart (Pie Chart)
-    const pieCtx = pieChartRef.current.getContext('2d');
+    const pieCtx = pieChartRef.current.getContext("2d");
 
     const pieData = {
       labels: ["Category A", "Category B", "Category C"],
@@ -107,12 +107,18 @@ function AdminDashboard() {
           <div className="row mt-3">
             <div className="container flex grid grid-cols-2">
               {/* First Column with Doughnut Chart */}
-              <div className="bg-gray-200 flex justify-center " style={{ height: '400px' }}>
+              <div
+                className=" flex justify-center "
+                style={{ height: "400px" }}
+              >
                 <canvas ref={chartRef}></canvas>
               </div>
 
               {/* Second Column with Pie Chart */}
-              <div className="bg-gray-200 flex justify-center " style={{ height: '400px' }}>
+              <div
+                className=" flex justify-center "
+                style={{ height: "400px" }}
+              >
                 <canvas ref={pieChartRef}></canvas>
               </div>
             </div>

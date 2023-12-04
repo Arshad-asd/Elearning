@@ -14,6 +14,8 @@ function Plan({ razorpayKey }) {
   const { userInfo } = useSelector((state) => state.auth || {});
   const decode = jwt_decode(userInfo.access);
   const { user_id } = decode;
+  const { type } =userInfo
+  const purchaseOrder = ['Basic','Medium','Premium']
 
   useEffect(() => {
     // Fetch plans from the API endpoint
@@ -111,57 +113,73 @@ function Plan({ razorpayKey }) {
     <>
       <div className="plan-container">
         {plans.map((plan) => (
-          <div key={plan.type} className="columns">
-            <ul className="price" style={{ backgroundColor: plan.backgroundColor }}>
-              <li className="header">{plan.type}</li>
-              <li className="grey">₹ {plan.amount}</li>
-              <li>
-                <i
-                  className="fa fa-check"
-                  aria-hidden="true"
-                  style={{ color: '#1dff1d', marginRight: '8px' }}
-                ></i>
-                <span style={{ marginLeft: '8px' }}>Watch all lessons</span>
-              </li>
-              <li>
-                <i
-                  className="fa fa-check"
-                  aria-hidden="true"
-                  style={{ color: '#1dff1d', marginRight: '8px' }}
-                ></i>
-                <span style={{ marginLeft: '8px' }}>Practice workouts</span>
-              </li>
-              <li>
-                <i
-                  className="fa fa-check"
-                  aria-hidden="true"
-                  style={{ color: '#1dff1d', marginRight: '8px' }}
-                ></i>
-                <span style={{ marginLeft: '8px' }}>Live class access</span>
-              </li>
-              <li>
-                {plan.type === 'Premium' ? (
-                  <i
-                    className="fa fa-check"
-                    aria-hidden="true"
-                    style={{ color: '#1dff1d', marginRight: '8px' }}
-                  ></i>
-                ) : (
-                  <i className="fa fa-times" aria-hidden="true" style={{ color: 'red', marginRight: '8px' }}></i>
-                )}
-                <span style={{ marginLeft: '8px' }}>Lifetime access</span>
-              </li>
-              <li className="grey">
-                {/* Pass the planId, amount, and subscriptionType to the Razorpay function on button click */}
-                <button
-                  className="button"
-                  onClick={() => handleRazorpayPayment(plan.id, plan.amount, plan.type)}
-                >
-                  Buy Now
-                </button>
-              </li>
-            </ul>
-          </div>
+          (type!==plan.type && purchaseOrder.indexOf(plan.type)>purchaseOrder.indexOf(type))?(
+            <div key={plan.type} className="columns">
+                        <ul className="price" style={{ backgroundColor: plan.backgroundColor }}>
+                          <li className="header">{plan.type}</li>
+                          <li className="grey">₹ {plan.amount}</li>
+                          <li>
+                            <i
+                              className="fa fa-check"
+                              aria-hidden="true"
+                              style={{ color: '#1dff1d', marginRight: '8px' }}
+                            ></i>
+                            <span style={{ marginLeft: '8px' }}>Watch all lessons</span>
+                          </li>
+                          <li>
+                            <i
+                              className="fa fa-check"
+                              aria-hidden="true"
+                              style={{ color: '#1dff1d', marginRight: '8px' }}
+                            ></i>
+                            <span style={{ marginLeft: '8px' }}>Practice workouts</span>
+                          </li>
+                          <li>
+                            <i
+                              className="fa fa-check"
+                              aria-hidden="true"
+                              style={{ color: '#1dff1d', marginRight: '8px' }}
+                            ></i>
+                            <span style={{ marginLeft: '8px' }}>Live class access</span>
+                          </li>
+                          <li>
+                            {plan.type === 'Premium' ? (
+                              <i
+                                className="fa fa-check"
+                                aria-hidden="true"
+                                style={{ color: '#1dff1d', marginRight: '8px' }}
+                              ></i>
+                            ) : (
+                              <i className="fa fa-times" aria-hidden="true" style={{ color: 'red', marginRight: '8px' }}></i>
+                            )}
+                            <span style={{ marginLeft: '8px' }}>Lifetime access</span>
+                          </li>
+                          
+                            {/* Pass the planId, amount, and subscriptionType to the Razorpay function on button click */}
+                            {(type)?(
+                              <li className="grey">
+                                <button
+                                  className="button"
+                                  onClick={() => handleRazorpayPayment(plan.id, plan.amount, plan.type)}
+                                >
+                                  Upgrade Plan
+                                </button>
+                              </li>
+                            ):(
+                              <li className="grey">
+                                <button
+                                  className="button"
+                                  onClick={() => handleRazorpayPayment(plan.id, plan.amount, plan.type)}
+                                >
+                                  Buy Now
+                                </button>
+                              </li>
+                            )}
+                        </ul>
+            </div>
+          ):purchaseOrder.length-1 == purchaseOrder.indexOf(plan.type)?(
+              <p>No available plans</p>
+          ):null
         ))}
       </div>
     </>

@@ -29,6 +29,10 @@ import SuccessPage from '../../Components/Sections/SuccessPage'
 import TutorCourseManagement from '../tutor/course/TutorCourseManagement'
 import SubscriptionManagement from '../admin/SubscriptionManagement'
 import Playlist from '../user/course/PlayList'
+import LessonsManagement from '../tutor/course/LessonsManagement'
+import Shedules from '../tutor/shedules/Shedules'
+import Room from '../user/service/Room'
+import TutorRoom from '../tutor/room/TutorRoom'
 
 
 const Routers = () => {
@@ -43,10 +47,11 @@ const Routers = () => {
             <Route path="/" element={<Home />}/>
             <Route path='/profile' element={<Profile />} />
             <Route path='/plans' element={<Plan />} />
-            <Route path='/service' element={<UserLives />} />
+            <Route path='/lives' element={<UserLives />} />
             <Route path='/courses' element={<Course />} />
             <Route path='/success' element={<SuccessPage />} />
-            <Route path="/playlist" element={<Playlist />} />
+            <Route  path="/playlist/:courseId" element={<Playlist />} />
+            <Route path="/room/:roomId" element={<Room />} />
         </Route>
         {/* <------- Admin Routes -------> */}
   
@@ -71,7 +76,9 @@ const Routers = () => {
             <Route path='/tutor/profile' element={<TutorProfile />} />
             <Route path='/tutor/lives' element={<Lives />} />
             <Route path='/tutor/courses' element={<TutorCourseManagement />} />
-            
+            <Route path='/tutor/lessons' element={<LessonsManagement />} />
+            <Route path='/tutor/shedules' element={<Shedules />} />
+            <Route path="/tutor/room/:roomId/:id" element={<TutorRoom />} />
         </Route>
 
         <Route path="*" element={<ErrorPage />} />

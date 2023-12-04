@@ -175,7 +175,7 @@ function AdminSidebar() {
               </li>
             </NavLink>
             {/* New li tags with corresponding icons */}
-            <li>
+            {/* <li>
               <FaChartBar className={`sidebar-icon ${isIconsOnly ? "" : ""}`} />
               <span className={`menu-text ${isIconsOnly ? "hidden" : ""}`}>
                 Sales Report
@@ -186,7 +186,7 @@ function AdminSidebar() {
               <span className={`menu-text ${isIconsOnly ? "hidden" : ""}`}>
                 Messages
               </span>
-            </li>
+            </li> */}
             <li className="logout-button" onClick={handleLogout}>
               <FaSignOutAlt className="sidebar-icon" />
               <span className={`menu-text ${isIconsOnly ? "hidden" : ""}`}>

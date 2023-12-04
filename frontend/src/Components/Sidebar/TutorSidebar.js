@@ -2,6 +2,7 @@ import { FaHome, FaUser, FaChalkboardTeacher, FaBook, FaMoneyBillAlt, FaChartBar
 import { RiLiveLine } from 'react-icons/ri';
 import { GrSchedulePlay } from 'react-icons/gr';
 import { NavLink,useNavigate } from 'react-router-dom';
+import { MdPlayLesson } from "react-icons/md";
 
 import React, { useState } from 'react';
 import '../../Components/Sidebar/TutorSidebar.css';
@@ -12,6 +13,8 @@ import { TutorLogout } from '../../Redux/slices/tutorSlice/tutorAuthSlice';
 import { toast} from 'react-toastify';
 
 function TutorSidebar() {
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+
   const [isIconsOnly, setIsIconsOnly] = useState(false);
   const {tutorInfo}=useSelector((state)=>state.tutorAuth)
   const dispatch = useDispatch();
@@ -20,7 +23,9 @@ function TutorSidebar() {
     setIsIconsOnly(!isIconsOnly);
   };
   
-  
+  const toggleSubMenu = () => {
+    setIsSubMenuOpen(!isSubMenuOpen);
+  };
   const handleLogout = () => {
     console.log('Logout clicked');
     showToast("logout Sucessfully",'success')
@@ -62,20 +67,35 @@ function TutorSidebar() {
           </li>
           </NavLink>
           
-          <NavLink to='/tutor/courses' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
-          <li>
-          <FaBook className={`sidebar-icon ${isIconsOnly ? '' : ''}`} />
-            <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Courses</span>
-          </li>
-          </NavLink>
+          <NavLink to="/tutor/courses" className="active-link" style={{ textDecoration: 'none', color: 'black' }}>
+              <li onClick={toggleSubMenu}>
+                <FaBook className={`sidebar-icon ${isIconsOnly ? '' : ''}`} />
+                <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Courses</span>
+              </li>
+            </NavLink>
+            {isSubMenuOpen && (
+              <ul className="sub-categories">
+                <li style={{ marginLeft: '50px' }}>
+                  <NavLink to="/tutor/lessons" style={{ textDecoration: 'none', color: 'black' }}>
+                    <div className='flex '>
+                    <MdPlayLesson />
+                    <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`} style={{paddingLeft:"10px"}}>Lessons</span>
+                    </div>
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+
+          <NavLink to='/tutor/shedules' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
           <li>
            <GrSchedulePlay className={`sidebar-icon ${isIconsOnly ? '' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Shedules</span>
           </li>
-          <li>
+          </NavLink>
+          {/* <li>
             <FaEnvelope className={`sidebar-icon ${isIconsOnly ? '' : ''}`} />
             <span className={`menu-text ${isIconsOnly ? 'hidden' : ''}`}>Messages</span>
-          </li>
+          </li> */}
           <NavLink to='/tutor/profile' className="active-link" style={{ textDecoration: 'none', color: 'black' }}>  
           <li>
             <FaUser className="sidebar-icon" />

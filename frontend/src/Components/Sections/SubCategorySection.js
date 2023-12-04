@@ -19,7 +19,6 @@ const SubCategorySection = ({ selectedCategory, subcategories }) => {
         });
     }
   }, [selectedSubcategory]);
-
   return (
     <div className="container px-4 px-lg-5 mt-5" id='subcategories'>
       {selectedCategory && (
